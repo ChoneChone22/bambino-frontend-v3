@@ -4,14 +4,43 @@ import Link from "next/link";
 import { useState } from "react";
 import { Menu, X, Search } from "lucide-react";
 import Image from "next/image";
+import CartSheet from "./CartSheet";
+import { useSearchParams, useRouter } from "next/navigation";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+
+  const router = useRouter();
+
+  const searchParams = useSearchParams();
+  const [searchQuery, setSearchQuery] = useState(searchParams.get("q") || "");
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchQuery(value);
+
+    const params = new URLSearchParams(searchParams.toString());
+    if (value) {
+      params.set("q", value);
+    } else {
+      params.delete("q");
+    }
+
+    router.replace(`?${params.toString()}`);
+  };
+
+  const handleRemove = () => {
+    setSearchQuery("");
+
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("q");
+
+    router.replace(`?${params.toString()}`);
+  };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b border-border">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-background border-b border-border">
       <nav className="flex items-center justify-between px-6 py-4 md:px-12 lg:px-20">
         <div className="flex items-center gap-8">
           <Link
@@ -30,32 +59,32 @@ export default function Header() {
 
         <div className="hidden md:flex items-center gap-18">
           <Link
-            href="#philosophy"
-            className="text-sm tracking-wide text-muted-foreground hover:text-foreground transition-colors"
+            href="/"
+            className="text-sm tracking-wide text-muted-foreground hover:text-primary transition-colors"
           >
             Home
           </Link>
           <Link
-            href="#philosophy"
-            className="text-sm tracking-wide text-muted-foreground hover:text-foreground transition-colors"
+            href="#about_us"
+            className="text-sm tracking-wide text-muted-foreground hover:text-primary transition-colors"
           >
             About Us
           </Link>
           <Link
             href="#menu"
-            className="text-sm tracking-wide text-muted-foreground hover:text-foreground transition-colors"
+            className="text-sm tracking-wide text-muted-foreground hover:text-primary transition-colors"
           >
             Menu
           </Link>
           <Link
-            href="#menu"
-            className="text-sm tracking-wide text-muted-foreground hover:text-foreground transition-colors"
+            href="#contact_us"
+            className="text-sm tracking-wide text-muted-foreground hover:text-primary transition-colors"
           >
             Contact Us
           </Link>
           <Link
-            href="#menu"
-            className="text-sm tracking-wide text-muted-foreground hover:text-foreground transition-colors"
+            href="#career"
+            className="text-sm tracking-wide text-muted-foreground hover:text-primary transition-colors"
           >
             Career
           </Link>
@@ -68,22 +97,23 @@ export default function Header() {
               type="text"
               placeholder="Search menu..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={handleChange}
               className="bg-transparent border-none outline-none text-sm py-1 w-48 placeholder:text-muted-foreground"
               autoFocus
             />
             <button
               onClick={() => {
-                setIsSearchOpen(false);
-                setSearchQuery("");
+                handleRemove();
               }}
-              className="p-1 hover:text-muted-foreground transition-colors"
+              className={`p-1 hover:text-muted-foreground transition-colors ${
+                searchQuery ? "visible" : "invisible"
+              }`}
               aria-label="Close search"
             >
               <X className="w-4 h-4" />
             </button>
           </div>
-          {/* <CartSheet /> */}
+          <CartSheet />
         </div>
 
         <div className="flex md:hidden items-center gap-2">
@@ -94,7 +124,7 @@ export default function Header() {
           >
             <Search className="w-5 h-5" />
           </button>
-          {/* <CartSheet /> */}
+          <CartSheet />
           <button
             className="p-2"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -118,16 +148,15 @@ export default function Header() {
               type="text"
               placeholder="Search menu..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={handleChange}
               className="bg-transparent border-none outline-none text-sm py-2 flex-1 placeholder:text-muted-foreground"
               autoFocus
             />
             <button
               onClick={() => {
-                setIsSearchOpen(false);
-                setSearchQuery("");
+                handleRemove();
               }}
-              className="p-1"
+              className={`p-1 ${searchQuery ? "visible" : "invisible"}`}
               aria-label="Close search"
             >
               <X className="w-4 h-4" />
@@ -140,32 +169,39 @@ export default function Header() {
         <div className="md:hidden absolute top-full left-0 right-0 bg-background border-t border-border">
           <div className="flex flex-col px-6 py-4 gap-4">
             <Link
-              href="#philosophy"
-              className="text-sm tracking-wide text-muted-foreground hover:text-foreground transition-colors"
+              href="/"
+              className="text-sm tracking-wide text-muted-foreground hover:text-primary transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
-              Philosophy
+              Home
+            </Link>
+            <Link
+              href="#about_us"
+              className="text-sm tracking-wide text-muted-foreground hover:text-primary transition-colors"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              About Us
             </Link>
             <Link
               href="#menu"
-              className="text-sm tracking-wide text-muted-foreground hover:text-foreground transition-colors"
+              className="text-sm tracking-wide text-muted-foreground hover:text-primary transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
               Menu
             </Link>
             <Link
-              href="#reserve"
-              className="text-sm tracking-wide text-muted-foreground hover:text-foreground transition-colors"
+              href="#contact_us"
+              className="text-sm tracking-wide text-muted-foreground hover:text-primary transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
-              Reserve
+              Contact Us
             </Link>
             <Link
-              href="#contact"
-              className="text-sm tracking-wide text-muted-foreground hover:text-foreground transition-colors"
+              href="#career"
+              className="text-sm tracking-wide text-muted-foreground hover:text-primary transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
-              Contact
+              Career
             </Link>
           </div>
         </div>
