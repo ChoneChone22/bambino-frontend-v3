@@ -93,7 +93,7 @@ export default function ContactUs() {
                   id="message"
                   rows={3}
                   placeholder="Special requests or dietary requirements"
-                  className="w-full px-0 py-3 bg-transparent border-b border-(--color-primary) hover:border-(--color-primary) text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-foreground transition-colors resize-none"
+                  className="w-full px-0 py-3 bg-transparent border-b border-(--color-primary) focus:border-(--color-primary) text-foreground placeholder:text-muted-foreground focus:outline-none  transition-colors resize-none"
                 />
               </div>
 

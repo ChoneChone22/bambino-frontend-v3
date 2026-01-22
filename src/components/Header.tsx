@@ -126,6 +126,7 @@ export default function Header() {
           >
             <Search className="w-5 h-5" />
           </button>
+           <CircleUser className="w-5 h-5"/>
           <CartSheet />
           <button
             className="p-2"
