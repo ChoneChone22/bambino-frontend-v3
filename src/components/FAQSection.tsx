@@ -33,9 +33,9 @@ export default function FaqSection() {
     <section className="py-24 px-6 md:px-12 lg:px-20">
       <div className="max-w-3xl mx-auto">
         <div className="text-center mb-16">
-          <p className="text-muted-foreground text-sm tracking-[0.3em] uppercase mb-4">
+          {/* <p className="text-muted-foreground text-sm tracking-[0.3em] uppercase mb-4">
             Questions & Answers
-          </p>
+          </p> */}
           <h2 className="font-serif text-3xl md:text-4xl text-balance">
             Frequently Asked Questions
           </h2>

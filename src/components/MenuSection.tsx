@@ -86,7 +86,7 @@ export default function MenuSection() {
       let allMenuItems: MenuItem[] = [];
       if (selectedCategory === "all") {
         const response = await fetch(
-          process.env.NEXT_PUBLIC_BASE_URL + "/products?page=1&limit=10",
+          process.env.NEXT_PUBLIC_BASE_URL + "/products?page=1&limit=4",
         );
         const data = await response.json();
         allMenuItems = data.data;
@@ -109,7 +109,7 @@ export default function MenuSection() {
     >
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-16">
-          <p className="text-sm tracking-[0.2em] md:text-4xl lg:text-5xl uppercase text-(--color-primary-foreground) mb-4">
+          <p className="text-3xl md:text-4xl lg:text-5xl text-(--color-text) mb-4">
             BamBite Menu
           </p>
           <h2 className="font-serif text-xl">All the best in one place</h2>

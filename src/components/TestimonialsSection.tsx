@@ -73,9 +73,9 @@ export default function TestimonialsSection() {
     <section className="py-24 md:py-32 px-6 md:px-12 lg:px-20 bg-secondary">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-16">
-          <p className="text-sm tracking-[0.2em] uppercase text-muted-foreground mb-4">
+          {/* <p className="text-sm tracking-[0.2em] uppercase text-muted-foreground mb-4">
             Feedbacks
-          </p>
+          </p> */}
           <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl font-light">
             What our customers say
           </h2>

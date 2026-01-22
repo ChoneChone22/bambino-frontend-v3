@@ -15,9 +15,9 @@ export default function ContactUs() {
           </div>
 
           <div>
-            <p className="text-sm tracking-[0.2em] uppercase text-muted-foreground mb-4">
+            {/* <p className="text-sm tracking-[0.2em] uppercase text-muted-foreground mb-4">
               Contact
-            </p>
+            </p> */}
             <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl font-light mb-8">
               Reach us here
             </h2>
