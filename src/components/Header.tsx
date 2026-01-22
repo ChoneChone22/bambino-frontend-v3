@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Menu, X, Search } from "lucide-react";
+import { Menu, X, Search,CircleUser } from "lucide-react";
 import Image from "next/image";
 import CartSheet from "./CartSheet";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -114,6 +114,7 @@ export default function Header() {
               <X className="w-4 h-4" />
             </button>
           </div>
+          <CircleUser className="w-5 h-5"/>
           <CartSheet />
         </div>
 

@@ -4,6 +4,8 @@ import PhilosophySection from "@/components/PhilosophySection";
 import { CartProvider } from "@/components/CartContext";
 import MenuSection from "@/components/MenuSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
+import FaqSection from "@/components/FAQSection";
+import ContactUs from "@/components/ContactUs";
 import { Suspense } from "react";
 
 export default function Home() {
@@ -17,6 +19,8 @@ export default function Home() {
         <PhilosophySection />
         <MenuSection />
         <TestimonialsSection />
+        <FaqSection />
+        <ContactUs />
       </main>
     </CartProvider>
   );

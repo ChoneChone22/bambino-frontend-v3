@@ -2,7 +2,7 @@ import Image from "next/image"
 
 export default function PhilosophySection() {
   return (
-    <section id="philosophy" className="py-24 md:py-32 px-6 md:px-12 lg:px-20">
+    <section id="about_us" className="py-24 md:py-32 px-6 md:px-12 lg:px-20">
       <div className="max-w-6xl mx-auto">
         <p className="text-sm tracking-[0.2em] uppercase text-muted-foreground mb-4">
           Our Philosophy

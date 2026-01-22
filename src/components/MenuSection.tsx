@@ -101,7 +101,6 @@ export default function MenuSection() {
     };
     fetchMenuItems();
   }, [selectedCategory]);
-  console.log("menuItems", menuItems);
 
   return (
     <section
