@@ -41,7 +41,7 @@ export default function Header() {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background border-b border-border">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-(--color-background) text-(--color-text) border-b border-border">
       <nav className="flex items-center justify-between px-6 py-4 md:px-12 lg:px-20">
         <div className="flex items-center gap-8">
           <Link
