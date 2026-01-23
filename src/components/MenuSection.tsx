@@ -5,7 +5,7 @@ import { ShoppingCart } from "lucide-react";
 import { useCart } from "./CartContext";
 import { useEffect, useState } from "react";
 import { MenuItem } from "@/types/api/menuItem";
-import QuantityControls from "@/components/QualityControls";  
+import QuantityControls from "@/components/QualityControls";
 
 export default function MenuSection() {
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
@@ -34,7 +34,7 @@ export default function MenuSection() {
           <h2 className="font-serif text-xl">All the best in one place</h2>
         </div>
 
-        <div className="grid md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-8">
           {menuItems.map((item) => (
             <div
               key={item.id}
@@ -62,9 +62,13 @@ export default function MenuSection() {
                     {item.description}
                   </p>
                 </div>
-                <div className="flex items-center justify-between gap-4 mt-4 text-(--color-title)">
-                  <span className="font-serif text-lg">฿{item.price}</span>
-                  <QuantityControls item={item} />
+                <div className="mt-4 text-(--color-title)">
+                  <div className="flex flex-col sm:flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-4">
+                    <span className="font-serif text-lg">{`฿${item.price}`}</span>
+                    <div className="w-full md:w-auto">
+                      <QuantityControls item={item} />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

@@ -22,7 +22,7 @@ export default function QuantityControls({ item }: { item: MenuItem }) {
       {quantity === 0 ? (
         <button
           onClick={handleAdd}
-          className="flex items-center text-xs gap-2 p-2 bg-transparent text-(--color-primary) border border-(--color-primary) rounded-3xl tracking-wider hover:bg-(--color-accent) transition-colors"
+          className="flex items-center text-xs gap-2 p-1 lg:p-2  bg-transparent text-(--color-primary) border border-(--color-primary) rounded-3xl tracking-wider hover:bg-(--color-accent) transition-colors"
           aria-label={`Add ${item.name} to cart`}
         >
           <ShoppingCart className="w-4 h-4" />
