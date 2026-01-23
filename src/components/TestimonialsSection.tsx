@@ -1,73 +1,79 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
+import { useState, useEffect } from "react";
 
 const testimonials = [
   {
     id: 1,
-    quote: "An extraordinary dining experience. Every dish was a masterpiece, and the attention to detail was impeccable.",
+    quote:
+      "An extraordinary dining experience. Every dish was a masterpiece, and the attention to detail was impeccable.",
     author: "Sarah Mitchell",
-    title: "Food Critic, The Dining Review"
+    title: "Food Critic, The Dining Review",
   },
   {
     id: 2,
-    quote: "TERROIR has redefined my expectations of modern cuisine. The flavors are bold yet refined.",
+    quote:
+      "TERROIR has redefined my expectations of modern cuisine. The flavors are bold yet refined.",
     author: "James Chen",
-    title: "Executive Chef, Le Jardin"
+    title: "Executive Chef, Le Jardin",
   },
   {
     id: 3,
-    quote: "From the moment we walked in, we knew this would be special. An unforgettable culinary journey.",
+    quote:
+      "From the moment we walked in, we knew this would be special. An unforgettable culinary journey.",
     author: "Elena Rodriguez",
-    title: "Travel & Lifestyle Editor"
+    title: "Travel & Lifestyle Editor",
   },
   {
     id: 4,
-    quote: "The perfect blend of tradition and innovation. Each course tells a story of passion and craftsmanship.",
+    quote:
+      "The perfect blend of tradition and innovation. Each course tells a story of passion and craftsmanship.",
     author: "Michael Torres",
-    title: "Culinary Director, Gourmet Magazine"
+    title: "Culinary Director, Gourmet Magazine",
   },
   {
     id: 5,
-    quote: "A true gem. The seasonal menu showcases the best local ingredients with stunning presentation.",
+    quote:
+      "A true gem. The seasonal menu showcases the best local ingredients with stunning presentation.",
     author: "Anna Bergström",
-    title: "Michelin Guide Inspector"
+    title: "Michelin Guide Inspector",
   },
   {
     id: 6,
-    quote: "Exceptional service and an atmosphere that transports you. Worth every visit.",
+    quote:
+      "Exceptional service and an atmosphere that transports you. Worth every visit.",
     author: "David Park",
-    title: "Restaurant Reviewer, City Weekly"
-  }
-]
+    title: "Restaurant Reviewer, City Weekly",
+  },
+];
 
-const CARDS_PER_SLIDE = 3
-const AUTO_SLIDE_INTERVAL = 5000
+const CARDS_PER_SLIDE = 3;
+const AUTO_SLIDE_INTERVAL = 5000;
 
 export default function TestimonialsSection() {
-  const [currentSlide, setCurrentSlide] = useState(0)
-  const totalSlides = Math.ceil(testimonials.length / CARDS_PER_SLIDE)
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const totalSlides = Math.ceil(testimonials.length / CARDS_PER_SLIDE);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev === totalSlides - 1 ? 0 : prev + 1))
-    }, AUTO_SLIDE_INTERVAL)
+      setCurrentSlide((prev) => (prev === totalSlides - 1 ? 0 : prev + 1));
+    }, AUTO_SLIDE_INTERVAL);
 
-    return () => clearInterval(interval)
-  }, [totalSlides])
+    return () => clearInterval(interval);
+  }, [totalSlides]);
 
   const goToPrevious = () => {
-    setCurrentSlide((prev) => (prev === 0 ? totalSlides - 1 : prev - 1))
-  }
+    setCurrentSlide((prev) => (prev === 0 ? totalSlides - 1 : prev - 1));
+  };
 
   const goToNext = () => {
-    setCurrentSlide((prev) => (prev === totalSlides - 1 ? 0 : prev + 1))
-  }
+    setCurrentSlide((prev) => (prev === totalSlides - 1 ? 0 : prev + 1));
+  };
 
   const getCurrentSlideItems = () => {
-    const startIndex = currentSlide * CARDS_PER_SLIDE
-    return testimonials.slice(startIndex, startIndex + CARDS_PER_SLIDE)
-  }
+    const startIndex = currentSlide * CARDS_PER_SLIDE;
+    return testimonials.slice(startIndex, startIndex + CARDS_PER_SLIDE);
+  };
 
   return (
     <section className="py-24 md:py-32 px-6 md:px-12 lg:px-20 bg-secondary">
@@ -76,7 +82,7 @@ export default function TestimonialsSection() {
           {/* <p className="text-sm tracking-[0.2em] uppercase text-muted-foreground mb-4">
             Feedbacks
           </p> */}
-          <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl font-light">
+          <h2 className="font-serif text-4xl font-medium leading-tight md:text-5xl lg:text-6xl text-balance text-(--color-text)">
             What our customers say
           </h2>
         </div>
@@ -84,8 +90,8 @@ export default function TestimonialsSection() {
         <div className="relative">
           <div className="grid md:grid-cols-3 gap-6 md:gap-8">
             {getCurrentSlideItems().map((testimonial) => (
-              <div 
-                key={testimonial.id} 
+              <div
+                key={testimonial.id}
                 className="bg-card p-8 flex flex-col rounded-xl"
               >
                 <blockquote className="font-serif text-lg leading-relaxed text-foreground mb-6 flex-1">
@@ -111,14 +117,16 @@ export default function TestimonialsSection() {
             >
               <ChevronLeft className="w-5 h-5" />
             </button> */}
-            
+
             <div className="flex gap-2">
               {Array.from({ length: totalSlides }).map((_, index) => (
                 <button
                   key={index}
                   onClick={() => setCurrentSlide(index)}
                   className={`w-2 h-2 transition-colors rounded-full ${
-                    index === currentSlide ? "bg-(--color-primary)" : "bg-foreground/20"
+                    index === currentSlide
+                      ? "bg-(--color-primary)"
+                      : "bg-foreground/20"
                   }`}
                   aria-label={`Go to slide ${index + 1}`}
                 />
@@ -136,5 +144,5 @@ export default function TestimonialsSection() {
         </div>
       </div>
     </section>
-  )
+  );
 }

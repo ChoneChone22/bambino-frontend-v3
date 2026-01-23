@@ -83,7 +83,7 @@ export default function ContactUs() {
                 <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl font-light mb-8">
                   Reach us here
                 </h2>
-                <p className="text-muted-foreground leading-relaxed mb-10">
+                <p className="text-muted-foreground text-lg leading-relaxed mb-10">
                   We&apos;re Here for You. Questions about our products,
                   locations, or collaborations? Send us a message and our
                   support team will respond shortly.
@@ -140,7 +140,7 @@ export default function ContactUs() {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="mt-4 px-8 py-3 bg-primary text-primary-foreground rounded-3xl text-sm tracking-wider uppercase hover:bg-primary/90 transition-all duration-300"
+                    className="inline-block mt-10 px-8 py-3 bg-(--color-primary-foreground) text-(--color-primary) hover:bg-(--color-primary) hover:text-(--color-primary-foreground) border border-(--color-primary) text-sm rounded-3xl tracking-wider uppercase transition-all duration-300"
                   >
                     {loading ? "Sending..." : "Submit Request"}
                   </button>

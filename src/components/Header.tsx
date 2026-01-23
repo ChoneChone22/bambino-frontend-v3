@@ -33,37 +33,11 @@ export default function Header() {
 
   const handleRemove = () => {
     setSearchQuery("");
-    setResults([]);
 
     const params = new URLSearchParams(searchParams.toString());
     params.delete("q");
 
     router.replace(`?${params.toString()}`);
-  };
-
-  const fetchResults = async (query: string) => {
-    setLoading(true);
-    try {
-      const params = new URLSearchParams({
-        page: "1",
-        limit: "100",
-        search: query,
-      });
-
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/products?${params.toString()}`,
-      );
-
-      if (!res.ok) throw new Error("Fetch failed");
-
-      const data = await res.json();
-
-      setResults(data.data);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
   };
 
   return (
@@ -130,9 +104,6 @@ export default function Header() {
                   e.preventDefault();
 
                   if (!searchQuery.trim()) return;
-
-                  setOpen(true);
-                  fetchResults(searchQuery);
                 }
               }}
               className="bg-transparent border-none outline-none text-sm py-1 w-35 placeholder:text-muted-foreground"
@@ -194,9 +165,6 @@ export default function Header() {
                   e.preventDefault();
 
                   if (!searchQuery.trim()) return;
-
-                  setOpen(true);
-                  fetchResults(searchQuery);
                 }
               }}
               className="bg-transparent rounded-3xl border-none outline-none text-sm py-2 flex-1 placeholder:text-muted-foreground"

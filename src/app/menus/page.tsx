@@ -48,10 +48,10 @@ export default function MenuPage() {
           {/* Hero */}
           <section className="pt-32 pb-12 bg-foreground text-background">
             <div className="container mx-auto px-6 text-center">
-              <h1 className="font-serif text-5xl md:text-7xl font-light mb-6">
+              <h1 className="font-serif text-4xl font-medium leading-tight md:text-5xl lg:text-6xl text-balance text-(--color-text) mb-6">
                 BamBite Menu
               </h1>
-              <p className="text-background/70 max-w-md mx-auto text-sm">
+              <p className="text-background/70 text-lg max-w-md mx-auto">
                 All the best in one place
               </p>
             </div>

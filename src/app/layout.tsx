@@ -1,18 +1,14 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Playfair_Display, DM_Sans } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
-import { Toaster } from "@/components/ui/sonner"
+import { Toaster } from "@/components/ui/sonner";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const _playfair = Playfair_Display({
   subsets: ["latin"],
+  variable: "--font-serif",
 });
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+const _dmSans = DM_Sans({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
   title: "BamBite - Your Best Restaurant in Town",
@@ -21,16 +17,11 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://bambite-v3.netlify.app"),
   alternates: { canonical: "/" },
   icons: {
-    icon: "/web-app-manifest-192x192.png", 
-    shortcut: "/web-app-manifest-512x512.png", 
+    icon: "/web-app-manifest-192x192.png",
+    shortcut: "/web-app-manifest-512x512.png",
     apple: "/web-app-manifest-512x512.png",
   },
-  keywords: [
-    "restaurant",
-    "bar",
-    "burmese cuisine",
-    "food",
-  ],
+  keywords: ["restaurant", "bar", "burmese cuisine", "food"],
   openGraph: {
     title: "BamBite - Your Best Restaurant in Town",
     description:
@@ -49,11 +40,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${_dmSans.variable} ${_playfair.variable}`}>
         <ThemeProvider>{children}</ThemeProvider>
-         <Toaster position="top-center" expand={false} richColors />
+        <Toaster position="top-center" expand={false} richColors />
       </body>
     </html>
   );

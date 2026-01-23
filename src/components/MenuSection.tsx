@@ -26,7 +26,7 @@ export default function MenuSection() {
     >
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-16">
-          <p className="text-3xl md:text-4xl lg:text-5xl text-(--color-text) mb-4">
+          <p className="font-serif text-4xl font-medium leading-tight md:text-5xl lg:text-6xl text-balance text-(--color-text) mb-4">
             BamBite Menu
           </p>
           <h2 className="font-serif text-xl">All the best in one place</h2>

@@ -17,13 +17,15 @@ export default function HeroSection() {
       <div className="relative z-10 w-full px-6 md:px-12 lg:px-20">
         <div className="max-w-2xl">
           <p className="text-background/80 text-sm tracking-[0.3em] uppercase mb-4">
-            More ways to enjoy Asian Cuisine
+            Bringing You More Ways to Enjoy Asian Cuisine
           </p>
           <h1 className="font-serif text-4xl md:text-6xl lg:text-7xl text-background font-light leading-tight text-balance">
-           Asian flavors beyond what you already know
+            Asian flavors beyond what you already know
           </h1>
           <p className="mt-8 text-background/80 max-w-xl leading-relaxed">
-            Introducing new ways to enjoy the tastes of Asia, thoughtfully prepared and easy to love.
+            Rooted in Asian flavors and reimagined with modern creativity,
+            BamBite brings together bold tastes, and the joy of our little
+            souls.
           </p>
           <a
             href="/menus"

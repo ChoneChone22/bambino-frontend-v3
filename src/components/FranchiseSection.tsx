@@ -34,7 +34,7 @@ export default function FranchiseSection() {
       <div className="max-w-6xl mx-auto px-6 md:px-12">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           <div>
-            <p className="text-(--color-text) text-3xl md:text-4xl lg:text-5xl mb-4">
+            <p           className="font-serif text-4xl font-medium leading-tight text-foreground md:text-5xl lg:text-6xl text-balance mb-4">
               Franchise Opportunity
             </p>
             <p className="text-(--color-text) leading-relaxed mb-8">
