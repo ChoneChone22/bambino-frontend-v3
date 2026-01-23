@@ -130,7 +130,7 @@ export default function ContactUs() {
               <button
                 type="submit"
                 disabled={loading}
-                className="mt-4 px-8 py-3 bg-primary text-primary-foreground text-sm tracking-wider uppercase hover:bg-primary/90 transition-all duration-300"
+                className="mt-4 px-8 py-3 bg-primary text-primary-foreground rounded-3xl text-sm tracking-wider uppercase hover:bg-primary/90 transition-all duration-300"
               >
                 {loading ? "Sending..." : "Submit Request"}
               </button>

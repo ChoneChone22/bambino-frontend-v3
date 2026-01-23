@@ -3,7 +3,7 @@ import { useCart } from "@/components/CartContext";
 import { ShoppingCart } from "lucide-react";
 
 export default function QuantityControls({ item }: { item: MenuItem }) {
-  const { items, addItem } = useCart();
+  const { items, addItem, viewCart } = useCart();
   const cartItem = items.find((i) => i.id === item.id);
   const quantity = cartItem?.quantity || 0;
 
@@ -31,7 +31,7 @@ export default function QuantityControls({ item }: { item: MenuItem }) {
       ) : (
         <div className="flex items-center gap-1">
           <button
-            onClick={handleAdd}
+            onClick={viewCart}
             className="flex items-center gap-2 p-2 bg-transparent text-(--color-primary) border border-(--color-primary) hover:border hover:bg-(--color-accent) rounded-3xl text-xs tracking-wider transition-colors"
             aria-label={`Add ${item.name} to cart`}
           >
