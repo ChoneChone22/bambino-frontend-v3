@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Menu, X, Search,CircleUser } from "lucide-react";
+import { Menu, X, Search, CircleUser } from "lucide-react";
 import Image from "next/image";
 import CartSheet from "./CartSheet";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -33,6 +33,7 @@ export default function Header() {
 
   const handleRemove = () => {
     setSearchQuery("");
+    setResults([]);
 
     const params = new URLSearchParams(searchParams.toString());
     params.delete("q");
@@ -40,10 +41,35 @@ export default function Header() {
     router.replace(`?${params.toString()}`);
   };
 
+  const fetchResults = async (query: string) => {
+    setLoading(true);
+    try {
+      const params = new URLSearchParams({
+        page: "1",
+        limit: "100",
+        search: query,
+      });
+
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/products?${params.toString()}`,
+      );
+
+      if (!res.ok) throw new Error("Fetch failed");
+
+      const data = await res.json();
+
+      setResults(data.data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-(--color-background) text-(--color-text) border-b border-border">
       <nav className="flex items-center justify-between px-6 py-4 md:px-12 lg:px-20">
-        <div className="flex items-center gap-8">
+        <div className="w-15 xl:w-40">
           <Link
             href="/"
             className="font-serif text-xl font-medium tracking-wide text-foreground"
@@ -51,14 +77,14 @@ export default function Header() {
             <Image
               src="/bb.png"
               alt="Bambite Logo"
-              width={120}
+              width={100}
               height={40}
               className="object-contain"
             />
           </Link>
         </div>
 
-        <div className="hidden md:flex items-center gap-18">
+        <div className="hidden xl:flex items-center gap-12">
           <Link
             href="/"
             className="text-sm tracking-wide text-muted-foreground hover:text-primary transition-colors"
@@ -72,7 +98,7 @@ export default function Header() {
             About Us
           </Link>
           <Link
-            href="/menu"
+            href="/menus"
             className="text-sm tracking-wide text-muted-foreground hover:text-primary transition-colors"
           >
             Menu
@@ -91,7 +117,7 @@ export default function Header() {
           </Link>
         </div>
 
-        <div className="hidden md:flex items-center gap-4">
+        <div className="hidden xl:flex items-center gap-4">
           <div className="flex items-center gap-2 border border-primary rounded-3xl px-3 py-1">
             <Search className="w-4 h-4 text-muted-foreground" />
             <Input
@@ -99,6 +125,16 @@ export default function Header() {
               placeholder="Search menu..."
               value={searchQuery}
               onChange={handleChange}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+
+                  if (!searchQuery.trim()) return;
+
+                  setOpen(true);
+                  fetchResults(searchQuery);
+                }
+              }}
               className="bg-transparent border-none outline-none text-sm py-1 w-35 placeholder:text-muted-foreground"
               autoFocus
             />
@@ -114,19 +150,20 @@ export default function Header() {
               <X className="w-4 h-4" />
             </button>
           </div>
-          <CircleUser className="w-5 h-5"/>
+
+          <CircleUser className="w-5 h-5" />
           <CartSheet />
         </div>
 
-        <div className="flex md:hidden items-center gap-2">
+        <div className="flex xl:hidden items-center gap-2">
           <button
             onClick={() => setIsSearchOpen(!isSearchOpen)}
             className="p-2"
             aria-label={isSearchOpen ? "Close search" : "Open search"}
           >
-            <Search className="w-5 h-5" />
+            <Search className="w-4 h-4 xl:w-5 xl:h-5" />
           </button>
-           <CircleUser className="w-5 h-5"/>
+          <CircleUser className="w-4 h-4 xl:w-5 xl:h-5" />
           <CartSheet />
           <button
             className="p-2"
@@ -134,9 +171,9 @@ export default function Header() {
             aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           >
             {isMenuOpen ? (
-              <X className="w-5 h-5" />
+              <X className="w-4 h-4" />
             ) : (
-              <Menu className="w-5 h-5" />
+              <Menu className="w-4 h-4" />
             )}
           </button>
         </div>
@@ -144,7 +181,7 @@ export default function Header() {
 
       {/* Mobile Search Bar */}
       {isSearchOpen && (
-        <div className="md:hidden px-6 pb-4">
+        <div className="xl:hidden px-6 pb-4">
           <div className="flex items-center gap-2 border border-primary rounded-3xl px-3 py-1">
             <Search className="w-4 h-4 text-muted-foreground" />
             <input
@@ -152,6 +189,16 @@ export default function Header() {
               placeholder="Search menu..."
               value={searchQuery}
               onChange={handleChange}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+
+                  if (!searchQuery.trim()) return;
+
+                  setOpen(true);
+                  fetchResults(searchQuery);
+                }
+              }}
               className="bg-transparent rounded-3xl border-none outline-none text-sm py-2 flex-1 placeholder:text-muted-foreground"
               autoFocus
             />
@@ -169,7 +216,7 @@ export default function Header() {
       )}
 
       {isMenuOpen && (
-        <div className="md:hidden absolute top-full left-0 right-0 bg-background border-t border-border">
+        <div className="xl:hidden absolute top-full left-0 right-0 bg-background border-t border-border">
           <div className="flex flex-col px-6 py-4 gap-4">
             <Link
               href="/"
@@ -186,21 +233,21 @@ export default function Header() {
               About Us
             </Link>
             <Link
-              href="#menu"
+              href="/menus"
               className="text-sm tracking-wide text-muted-foreground hover:text-primary transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
               Menu
             </Link>
             <Link
-              href="#contact_us"
+              href="/contact_us"
               className="text-sm tracking-wide text-muted-foreground hover:text-primary transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
               Contact Us
             </Link>
             <Link
-              href="#career"
+              href="/career"
               className="text-sm tracking-wide text-muted-foreground hover:text-primary transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >

@@ -33,49 +33,50 @@ export default function MenuSection() {
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-8">
-          {menuItems.map((item) => (
-            <div
-              key={item.id}
-              className="group flex flex-col h-full bg-(--color-background) p-1 rounded-md"
-            >
-              <div className="relative aspect-square overflow-hidden mb-2">
-                <Image
-                  src={item.imageUrls[0]}
-                  alt={item.name}
-                  fill
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
-                  priority
-                />
-              </div>
-              <div className="flex flex-col flex-1 p-2">
-                <div className="flex-1">
-                  <h3 className="font-serif text-xl mb-2 text-(--color-title)">
-                    {item.name}
-                  </h3>
-                  <p className="font-serif text-sm mb-2 text-(--color-title)">
-                    {item.thaiName}
-                  </p>
-                  <p className="text-muted-foreground text-sm line-clamp-2">
-                    {item.description}
-                  </p>
+          {menuItems.length > 0 &&
+            menuItems.map((item) => (
+              <div
+                key={item.id}
+                className="group flex flex-col h-full bg-(--color-background) p-1 rounded-md"
+              >
+                <div className="relative aspect-square overflow-hidden mb-2">
+                  <Image
+                    src={item.imageUrls[0]}
+                    alt={item.name}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    priority
+                  />
                 </div>
-                <div className="mt-4 text-(--color-title)">
-                  <div className="flex flex-col sm:flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-4">
-                    <span className="font-serif text-lg">{`฿${item.price}`}</span>
-                    <div className="w-full md:w-auto">
-                      <QuantityControls item={item} />
+                <div className="flex flex-col flex-1 p-2">
+                  <div className="flex-1">
+                    <h3 className="font-serif text-xl mb-2 text-(--color-title)">
+                      {item.name}
+                    </h3>
+                    <p className="font-serif text-sm mb-2 text-(--color-title)">
+                      {item.thaiName}
+                    </p>
+                    <p className="text-muted-foreground text-sm line-clamp-2">
+                      {item.description}
+                    </p>
+                  </div>
+                  <div className="mt-4 text-(--color-title)">
+                    <div className="flex flex-col sm:flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-4">
+                      <span className="font-serif text-lg">{`฿${item.price}`}</span>
+                      <div className="w-full md:w-auto">
+                        <QuantityControls item={item} />
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
         </div>
 
         <div className="text-center mt-16">
           <a
-            href="/menu"
+            href="/menus"
             className="inline-block px-8 py-3 bg-(--color-primary-foreground) text-(--color-primary) text-sm tracking-wider uppercase hover:bg-(--color-primary) hover:text-(--color-primary-foreground) hover:border hover:border-(--color-primary-foreground) rounded-4xl transition-all duration-300"
           >
             View Full Menu

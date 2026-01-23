@@ -33,7 +33,7 @@ export default function CartSheet() {
           className="relative p-2 hover:bg-secondary transition-colors"
           aria-label="Open cart"
         >
-          <ShoppingCart className="w-5 h-5" />
+          <ShoppingCart className="w-4 h-4 xl:w-5 xl:h-5" />
           {totalItems > 0 && (
             <span className="absolute -top-1 -right-1 w-5 h-5 bg-(--color-primary) text-(--color-primary-foreground) text-xs flex items-center justify-center rounded-full">
               {totalItems}
