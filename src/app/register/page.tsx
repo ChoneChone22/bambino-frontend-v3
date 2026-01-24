@@ -1,6 +1,6 @@
 import Header from "@/components/Header";
 import MyAccountHeroSection from "@/components/MyAccountHeroSection";
-import SignIn from "@/components/SignIn";
+import Register from "@/components/Register";
 import Footer from "@/components/Footer";
 import { CartProvider } from "@/components/CartContext";
 import { Suspense } from "react";
@@ -14,7 +14,7 @@ export default function RegisterPage() {
         </Suspense>
         <div className="pt-16">
           <MyAccountHeroSection />
-          <SignIn />
+          <Register />
         </div>
         <Footer />
       </main>
