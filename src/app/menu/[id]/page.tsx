@@ -3,6 +3,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { CartProvider } from "@/components/CartContext";
 import SingleMenu from "@/components/SingleMenu";
+import { fetchMenuItem } from "@/lib/api/menu";
 
 export default async function MenuItemPage({
   params,
@@ -12,21 +13,20 @@ export default async function MenuItemPage({
   const { id } = await params;
   console.log("mmsid", id);
 
+  const menuItem = await fetchMenuItem(id);
+
+  console.log("menuItem", menuItem);
+
   return (
-    <html>
-      <body>
-        <div
-          style={{
-            padding: "20px",
-            background: "red",
-            color: "white",
-            minHeight: "100vh",
-          }}
-        >
-          <h1>TEST PAGE WORKS!</h1>
-          <p>ID: {id}</p>
-        </div>
-      </body>
-    </html>
+    <CartProvider>
+      <main className="h-full bg-background">
+        <Suspense fallback={<div>Loading...</div>}>
+          <Header />
+        </Suspense>
+        <SingleMenu menuItem={menuItem} />
+
+        <Footer />
+      </main>
+    </CartProvider>
   );
 }

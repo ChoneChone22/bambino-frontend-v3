@@ -1,11 +1,46 @@
+"use client";
 import Image from "next/image";
-import { Button } from "./ui/button";
 import { Minus, Plus } from "lucide-react";
 import { useState } from "react";
 import { MenuItem } from "@/types/api/menuItem";
+import QuantityControls from "./QualityControls";
+import { useRouter } from "next/navigation";
+import { useCart } from "./CartContext";
+import {
+  Combobox,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxList,
+} from "@/components/ui/combobox";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
-export default function SingleMenu({ item }: MenuItem) {
+interface SingleMenuProps {
+  menuItem: MenuItem;
+}
+
+export default function SingleMenu({ menuItem }: SingleMenuProps) {
+  const router = useRouter();
+  const [quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(0);
+  const { updateQuantity } = useCart();
+
+  const decreaseQuantity = (id: string) => {
+    if (quantity > 1) setQuantity(quantity - 1);
+    updateQuantity(id, quantity - 1);
+  };
+
+  const increaseQuantity = (id: string) => {
+    setQuantity(quantity + 1);
+    updateQuantity(id, quantity + 1);
+  };
+  console.log(menuItem);
 
   return (
     <section className="pt-32 pb-16">
@@ -14,36 +49,30 @@ export default function SingleMenu({ item }: MenuItem) {
           {/* Left Side - Images */}
           <div className="space-y-4">
             {/* Main Image */}
-            <div className="aspect-4/3 max-h-100 overflow-hidden border border-border">
+            <div className="relative w-full h-105 bg-muted rounded-lg overflow-hidden">
               <Image
-                src={item.imageUrls[selectedImage]}
-                alt={item.name}
+                src={menuItem.imageUrls[selectedImage]}
+                alt={menuItem.name}
                 fill
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                className="object-cover transition-transform duration-500 group-hover:scale-105"
+                className="object-contain"
                 priority
               />
             </div>
 
             {/* Thumbnail Images */}
             <div className="grid grid-cols-3 gap-4">
-              {item.images.map((img, index) => (
+              {menuItem.imageUrls.map((img, index) => (
                 <button
                   key={index}
                   onClick={() => setSelectedImage(index)}
-                  className={`aspect-square overflow-hidden border transition-all duration-300 ${
-                    selectedImage === index
-                      ? "border-foreground"
-                      : "border-border hover:border-muted-foreground"
-                  }`}
+                  className={`relative aspect-square rounded-md overflow-hidden border transition-all
+          ${selectedImage === index && "border-primary"}`}
                 >
                   <Image
                     src={img}
-                    alt={`${item.name} view ${index + 1}`}
+                    alt={`${menuItem.name} view ${index + 1}`}
                     fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
-                    priority
+                    className="object-contain bg-muted"
                   />
                 </button>
               ))}
@@ -52,67 +81,112 @@ export default function SingleMenu({ item }: MenuItem) {
 
           {/* Right Side - Details */}
           <div className="flex flex-col">
-            {/* Category */}
             <p className="text-xs uppercase tracking-ultra-wide text-muted-foreground mb-4">
-              {item.category}
+              {menuItem.category.name}
             </p>
 
-            {/* Title */}
             <h1 className="font-serif text-4xl md:text-5xl font-light mb-6">
-              {item.name}
+              {menuItem.name}
             </h1>
 
-            {/* Description */}
             <p className="text-muted-foreground leading-relaxed mb-8">
-              {item.description}
+              {menuItem.thaiName}
             </p>
 
-            {/* Price */}
-            <div className="mb-8">
-              <span className="font-serif text-3xl">${item.price}</span>
+            <p className="text-muted-foreground leading-relaxed mb-8">
+              {menuItem.description}
+            </p>
+
+            <div className="mb-4">
+              {menuItem.productOptions.length > 0 &&
+                menuItem.productOptions.map((opt) => (
+                  <div key={opt.id} className="mb-4">
+                    <p className="font-medium mb-2">{opt.option.name}</p>
+
+                    {opt.option.optionLists.length > 2 ? (
+                      <Combobox items={opt.option.optionLists}>
+                        <ComboboxInput
+                          className="w-40 rounded-3xl"
+                          placeholder={opt.option.optionLists[0]}
+                        />
+                        <ComboboxContent>
+                          <ComboboxEmpty>No items found.</ComboboxEmpty>
+                          <ComboboxList className="rounded-3xl shadow-none">
+                            {(item) => (
+                              <ComboboxItem key={item} value={item}>
+                                {item}
+                              </ComboboxItem>
+                            )}
+                          </ComboboxList>
+                        </ComboboxContent>
+                      </Combobox>
+                    ) : (
+                      <div className="flex flex-col gap-2">
+                        {opt.option.optionLists.map((list, i) => (
+                          <label
+                            key={i}
+                            className="flex items-center gap-2 text-sm"
+                          >
+                            <input type="radio" name={opt.id} value={list} />
+                            <span>{list}</span>
+                          </label>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
             </div>
 
-            {/* Quantity Selector */}
+            <div className="mb-8">
+              <span className="font-serif text-3xl">฿{menuItem.price}</span>
+            </div>
+
             <div className="flex items-center gap-4 mb-8">
-              <span className="text-sm uppercase tracking-wide text-muted-foreground">
-                Quantity
-              </span>
-              <div className="flex items-center border border-border">
+              <div className="flex items-center gap-2">
                 <button
-                  onClick={decreaseQuantity}
-                  className="p-3 hover:bg-muted transition-colors"
+                  className="p-1 border border-border rounded-lg bg-(--color-accent) text-(--color-text) hover:bg-(--color-accent/80) transition-colors"
                   aria-label="Decrease quantity"
+                  onClick={() => decreaseQuantity(menuItem.id)}
                 >
-                  <Minus size={16} />
+                  <Minus className="w-3 h-3" />
                 </button>
-                <span className="w-12 text-center font-medium">{quantity}</span>
+                <span className="w-6 text-center text-sm">{quantity}</span>
                 <button
-                  onClick={increaseQuantity}
-                  className="p-3 hover:bg-muted transition-colors"
+                  className="p-1 border border-border rounded-lg bg-(--color-accent) text-(--color-text) hover:bg-(--color-accent/80) transition-colors"
                   aria-label="Increase quantity"
+                  onClick={() => increaseQuantity(menuItem.id)}
                 >
-                  <Plus size={16} />
+                  <Plus className="w-3 h-3" />
                 </button>
               </div>
             </div>
 
             {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Button variant="outline" size="lg" className="flex-1">
-                Add to Cart
-              </Button>
-              <Button size="lg" className="flex-1">
+            <div className="flex flex-col sm:flex-row gap-4 mb-8">
+              <QuantityControls item={menuItem} />
+              <button
+                onClick={() => router.push("/checkout")}
+                className="w-50 flex items-center justify-center gap-2 p-2 bg-(--color-primary) text-(--color-primary-foreground) border border-(--color-primary) hover:border rounded-3xl text-xs tracking-wider transition-colors"
+              >
                 Buy Now
-              </Button>
+              </button>
             </div>
 
-            {/* Additional Info */}
-            <div className="mt-12 pt-8 border-t border-border">
-              <p className="text-xs text-muted-foreground">
-                Please inform us of any dietary requirements or allergies when
-                ordering.
-              </p>
-            </div>
+            <Accordion
+              type="single"
+              collapsible
+              defaultValue="shipping"
+              className="max-w-lg"
+            >
+              <AccordionItem value="shipping">
+                <AccordionTrigger className="text-xl hover:no-underline">
+                  What are your Ingredients?
+                </AccordionTrigger>
+                <AccordionContent >
+                 {menuItem.ingredients}
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           </div>
         </div>
       </div>

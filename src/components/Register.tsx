@@ -40,7 +40,7 @@ export default function Register() {
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
                   className="w-full px-0 py-3 bg-transparent border-b border-(--color-primary) text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-(--color-primary) transition-colors"
-                  required
+                  // required
                 />
               </div>
             </div>
