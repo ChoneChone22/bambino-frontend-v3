@@ -121,8 +121,9 @@ export default function Header() {
               <X className="w-4 h-4" />
             </button>
           </div>
-
-          <CircleUser className="w-5 h-5" />
+          <Link href="/my_account">
+            <CircleUser className="w-5 h-5" />
+          </Link>
           <CartSheet />
         </div>
 
@@ -134,7 +135,9 @@ export default function Header() {
           >
             <Search className="w-4 h-4 xl:w-5 xl:h-5" />
           </button>
-          <CircleUser className="w-4 h-4 xl:w-5 xl:h-5" />
+          <Link href="/my_account">
+            <CircleUser className="w-4 h-4 xl:w-5 xl:h-5" />
+          </Link>
           <CartSheet />
           <button
             className="p-2"

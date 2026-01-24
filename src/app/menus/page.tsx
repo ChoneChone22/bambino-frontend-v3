@@ -9,6 +9,7 @@ import { useState, useEffect } from "react";
 import { Category } from "@/types/api/category";
 import { MenuItem } from "@/types/api/menuItem";
 import QuantityControls from "@/components/QualityControls";
+import Link from "next/link";
 
 export default function MenuPage() {
   const [menuCategories, setMenuCategories] = useState<Category[]>([]);
@@ -115,7 +116,8 @@ export default function MenuPage() {
                 {!loading &&
                   menuItems.length > 0 &&
                   menuItems.map((item) => (
-                    <div
+                    <Link
+                      href={`/menu/${item.id}`}
                       key={item.id}
                       className="group cursor-pointer flex flex-col h-full bg-(--color-background) p-1 rounded-md"
                     >
@@ -152,7 +154,7 @@ export default function MenuPage() {
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </Link>
                   ))}
               </div>
             </div>
