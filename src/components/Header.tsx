@@ -63,7 +63,7 @@ export default function Header() {
           </Link>
           <Link
             href="/about_us"
-            className="text-sm tracking-wide text-muted-foreground hover:text-(--color-primary)transition-colors"
+            className="text-sm tracking-wide text-muted-foreground hover:text-(--color-primary) transition-colors"
           >
             About Us
           </Link>
@@ -103,14 +103,14 @@ export default function Header() {
                   router.push(`/search?q=${encodeURIComponent(trimmed)}`);
                 }
               }}
-              className="bg-transparent border-none outline-none text-sm py-1 w-35 placeholder:text-muted-foreground"
+              className="bg-transparent border-none outline-none text-sm text-(--color-text) py-1 w-35 placeholder:text-muted-foreground"
               autoFocus
             />
             <button
               onClick={() => {
                 handleRemove();
               }}
-              className={`p-1 hover:text-muted-foreground transition-colors ${
+              className={`p-1 hover:text-(--color-text-secondary) transition-colors text-(--color-text-secondary) ${
                 searchQuery ? "visible" : "invisible"
               }`}
               aria-label="Close search"
