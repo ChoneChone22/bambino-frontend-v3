@@ -106,7 +106,7 @@ export default function ProfilePage() {
       {/* Main Content */}
       <div className="max-w-4xl mx-auto px-4 py-12">
         {/* Tabs */}
-        <div className="flex gap-4 mb-8 border-b border_border overflow-x-auto">
+        <div className="flex gap-4 mb-8 overflow-x-auto">
           <button
             onClick={() => setActiveTab("profile")}
             className={`px-4 py-3 font-medium border-b-2 transition-colors whitespace-nowrap ${

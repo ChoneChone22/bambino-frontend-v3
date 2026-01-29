@@ -33,14 +33,14 @@ export default function ProfileSection({
     <div className="space-y-6">
       <Card className="p-6">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-foreground">
+          <h2 className="text-2xl font-bold heading">
             Profile Information
           </h2>
           {!isEditing && (
             <Button
               onClick={onEdit}
-              variant="secondary"
-              className="flex items-center gap-2 bg-transparent"
+              variant="ghost"
+              className="flex items-center gap-2 heading"
             >
               <Edit2 className="w-4 h-4" />
               Edit Profile
@@ -57,14 +57,15 @@ export default function ProfileSection({
         {isEditing ? (
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-foreground mb-2">
+              <label className="block text-sm font-medium sub_heading mb-2">
                 Email Address
               </label>
-              <Input
+              <input
                 type="email"
                 value={user.email}
                 disabled
-                className="bg-muted"
+                className="w-full px-0 py-3 sub_heading secondary_background card border-b primary_border placeholder:heading focus:outline-none focus:primary_border disabled:opacity-50
+    disabled:cursor-not-allowed transition-colors"
               />
               <p className="text-xs text-muted-foreground mt-1">
                 Email cannot be changed
@@ -75,10 +76,14 @@ export default function ProfileSection({
               <label className="block text-sm font-medium text-foreground mb-2">
                 Full Name
               </label>
-              <Input
+              <input
                 type="text"
+                id="name"
+                placeholder="Full name"
                 value={formData.name}
                 onChange={(e) => onFormChange("name", e.target.value)}
+                className="w-full px-0 py-3 heading bg-transparent border-b primary_border placeholder:heading focus:outline-none focus:primary_border transition-colors"
+                required
               />
             </div>
 
@@ -90,7 +95,7 @@ export default function ProfileSection({
               >
                 {isSaving ? "Saving..." : "Save Changes"}
               </Button>
-              <Button onClick={onCancel} variant="outline">
+              <Button onClick={onCancel} variant="secondary">
                 Cancel
               </Button>
             </div>

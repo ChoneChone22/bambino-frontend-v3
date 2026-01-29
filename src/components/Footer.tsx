@@ -285,7 +285,7 @@ export default function Footer() {
             </p>
           </div>
           <div className="mt-8">
-            <h4 className="text-sm tracking-wider text-(--color-header1) mb-6">
+            <h4 className="text-sm tracking-wider heading mb-6">
               HOURS
             </h4>
             <ul className="space-y-4">
