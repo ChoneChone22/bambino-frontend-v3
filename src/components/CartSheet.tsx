@@ -24,7 +24,7 @@ export default function CartSheet() {
   } = useCart();
 
   const router = useRouter();
-  console.log("items", items);
+  console.log("item", items);
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -41,18 +41,18 @@ export default function CartSheet() {
           )}
         </button>
       </SheetTrigger>
-      <SheetContent className="w-full secondary_background sm:max-w-md flex flex-col">
+      <SheetContent className="w-full secondary_background sm:max-w-md flex flex-col border-none">
         <SheetHeader>
-          <SheetTitle className="font-serif text-2xl font-light heading2">
+          <SheetTitle className="font-serif text-2xl font-light">
             Your Order
           </SheetTitle>
         </SheetHeader>
 
         {items.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center text-center">
-            <ShoppingCart className="w-12 h-12 sub_heading2 mb-4" />
-            <p className="text-(--color-body)">Your cart is empty</p>
-            <p className="text-sm text-(--color-body) mt-2">
+            <ShoppingCart className="w-12 h-12 heading2 mb-4" />
+            <p className="heading2">Your cart is empty</p>
+            <p className="text-sm heading2 mt-2">
               Add items from the menu to get started
             </p>
           </div>
@@ -66,12 +66,14 @@ export default function CartSheet() {
                     className="flex gap-4 border-b primary_border p-4"
                   >
                     <div className="relative w-20 h-20 shrink-0 overflow-hidden">
-                      <Image
-                        src={item.image}
-                        alt={item.title}
-                        fill
-                        className="object-cover"
-                      />
+                      {item.image && (
+                        <Image
+                          src={item.image}
+                          alt={item.title}
+                          fill
+                          className="object-cover"
+                        />
+                      )}
                     </div>
                     <div className="flex-1 min-w-0">
                       <h4 className="font-serif text-lg heading2">
@@ -83,10 +85,12 @@ export default function CartSheet() {
                       <p className="text-sm heading2 truncate">
                         {item.description}
                       </p>
-                      <p className="text-sm heading2 truncate mt-2">
-                        {item.selectedOptions &&
-                          `${item.selectedOptions.displayName}: ${item.selectedOptions.value}`}
-                      </p>
+                      {item.selectedOptions.length > 0 &&
+                        item.selectedOptions.map((opt, i) => (
+                          <p className="text-sm heading2 truncate mt-2" key={i}>
+                            {opt.displayName}: {opt.value}
+                          </p>
+                        ))}
                       <p className="text-sm font-medium mt-1">฿{item.price}</p>
                     </div>
                     <div className="flex flex-col items-end justify-between">

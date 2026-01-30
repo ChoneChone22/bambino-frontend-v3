@@ -11,20 +11,60 @@ export default function QuantityControls({
   const cartItem = items.find((i) => i.id === item.id);
   const quantity = cartItem?.quantity || 0;
 
-  const handleAdd = () => {
-    addItem({
-      id: item.id,
-      title: item.name,
-      description: item.description,
-      price: item.price,
-      quantity: item.quantity || 0,
-      selectedOptions: item.selectedOptions,
-      thaiName: item.thaiName,
-      image: item.imageUrls[0],
-    });
-  };
+  const handleAdd = async () => {
+    const firstOpt = item.productOptions?.[0];
+    const firstValue = firstOpt?.option?.optionLists?.[0];
 
-  console.log("item", item);
+    const payload: {
+      productId: string;
+      quantity: number;
+      selectedOptions?: Record<string, string>;
+    } = {
+      productId: item.id,
+      quantity: item.quantity ?? 1,
+    };
+
+    if (item.selectedOptions) {
+      payload.selectedOptions = {
+        [item.selectedOptions.id]: item.selectedOptions.value,
+      };
+    } else if (firstOpt?.optionId && firstValue) {
+      payload.selectedOptions = {
+        [firstOpt.optionId]: firstValue,
+      };
+    }
+
+
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/cart/items`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        },
+      );
+
+      if (!res.ok) throw new Error("Failed to add item");
+
+      const data = await res.json();
+      
+      localStorage.setItem("token", JSON.stringify(data.data.guestToken));
+
+      addItem({
+        id: item.id,
+        title: item.name,
+        description: item.description,
+        price: item.price,
+        quantity: payload.quantity,
+        selectedOptions: item.selectedOptions,
+        thaiName: item.thaiName,
+        image: item.imageUrls[0],
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <div className="flex items-center gap-3">

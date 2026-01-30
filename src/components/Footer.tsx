@@ -293,7 +293,7 @@ export default function Footer() {
                 <Clock className="h-5 w-5 sub_heading mt-0.5 shrink-0" />
                 <div className="sub_heading">
                   <p className="sub_heading mb-1">Monday - Sunday</p>
-                  <p className="sub_heading">10:00 AM - 12:00 AM</p>
+                  <p className="sub_heading">10:00 AM - 00:00 AM</p>
                 </div>
               </li>
             </ul>

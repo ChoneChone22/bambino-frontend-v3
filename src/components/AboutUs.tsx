@@ -27,8 +27,8 @@ export default function AboutSection() {
               </p>
 
               <p className="body">
-                <span className="font-semibold primary_text">BamBite</span>{" "}
-                is the way of connecting generations, cultures, and experiences
+                <span className="font-semibold primary_text">BamBite</span> is
+                the way of connecting generations, cultures, and experiences
                 through food. Inspired by cuisines from across Asia, we explore
                 flavors, techniques, and dishes beyond the familiar with
                 creativity and care.
@@ -63,6 +63,7 @@ export default function AboutSection() {
                   src="/noodleMenu.jpg"
                   alt="Chef Bam in the kitchen"
                   fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   className="object-cover"
                 />
               </div>
@@ -74,6 +75,7 @@ export default function AboutSection() {
                     src="/noodleMenu.jpg"
                     alt="Signature Asian fusion dish"
                     fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     className="object-cover"
                   />
                 </div>
@@ -84,6 +86,7 @@ export default function AboutSection() {
                     src="/noodleMenu.jpg"
                     alt="Signature Asian fusion dish"
                     fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     className="object-cover"
                   />
                 </div>

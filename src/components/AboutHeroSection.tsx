@@ -3,17 +3,15 @@
 import Image from "next/image";
 
 export default function AboutHeroSection() {
-
   return (
     <section className="relative h-screen overflow-hidden">
-      <div
-        className="absolute inset-0 z-0"
-      >
+      <div className="absolute inset-0 z-0">
         <Image
           src="/noodleMenu.jpg"
           alt="BamBite kitchen with warm ambient lighting"
           fill
           className="object-cover"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           priority
         />
         <div className="absolute inset-0 cover" />
@@ -21,9 +19,7 @@ export default function AboutHeroSection() {
 
       {/* Content */}
       <div className="relative z-10 flex h-full flex-col items-center justify-center px-6 text-center">
-        <div
-          className="max-w-4xl"
-        >
+        <div className="max-w-4xl">
           <p className="mb-4 text-sm font-medium uppercase tracking-[0.3em] sub_heading">
             Our Story
           </p>

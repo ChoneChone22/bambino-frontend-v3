@@ -4,8 +4,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { z } from "zod";
-import Image from "next/image";
 import VerifyEmail from "@/components/VerifyEmailModal";
+import { toast } from "sonner";
 
 const checkoutSchema = z.object({
   email: z
@@ -68,10 +68,23 @@ export default function CheckoutPage() {
 
   const handleVerifyEmail = async () => {
     try {
-      setIsSubmitting(true);
+      const result = checkoutSchema.safeParse(formData);
 
+      if (!result.success) {
+        const fieldErrors: { email?: string; phone?: string } = {};
+
+        result.error.issues.forEach((err) => {
+          const field = err.path[0] as keyof typeof fieldErrors;
+          fieldErrors[field] = err.message;
+        });
+
+        setErrors(fieldErrors);
+
+        setIsSubmitting(false);
+        return;
+      }
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/auth/user/verify-email`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/auth/send-verification-email`,
         {
           method: "POST",
           headers: {
@@ -84,19 +97,20 @@ export default function CheckoutPage() {
         },
       );
 
-      if (!res.ok) {
-        throw new Error("Failed to send verification email");
-      }
-
       const data = await res.json();
       console.log("Verification sent:", data);
 
+      if (!res.ok) {
+        console.log("Res", res);
+
+        throw new Error(data.message);
+      }
+      toast.success(data.message);
+
       setOpen(false);
-      router.push("/");
     } catch (error: any) {
-      console.log(error);
-    } finally {
-      setIsSubmitting(false);
+      console.log("error", error);
+      toast.error(error.message || "An error occurred. Please try again.");
     }
   };
 

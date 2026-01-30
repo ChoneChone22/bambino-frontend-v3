@@ -1,27 +1,24 @@
 "use client";
 
-import { createContext, useContext, useState, type ReactNode } from "react";
-
-export interface CartItem {
-  id: string;
-  title: string;
-  description: string;
-  price: string;
-  quantity: number;
-  selectedOptions: {
-    id: string;
-    displayName: string;
-    value: string;
-  } | null;
-  image: string;
-  thaiName: string;
-}
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  type ReactNode,
+} from "react";
+import {
+  CartItemFromBackend,
+  SelectedOptionDisplay,
+  CartItem,
+} from "@/types/api/cart";
 
 interface CartContextType {
   items: CartItem[];
   addItem: (item: CartItem) => void;
   removeItem: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
+  updateOptions: (id: string, options: SelectedOptionDisplay) => void;
   clearCart: () => void;
   viewCart: () => void;
   open: boolean;
@@ -34,7 +31,62 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
+  const [totalItems, setTotalItems] = useState(1);
+  const [totalPrice, setTotalPrice] = useState(0);
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    const fetchCart = async () => {
+      let token;
+      const storedValue = localStorage.getItem("token");
+
+      if (!storedValue) return;
+
+      try {
+        token = JSON.parse(storedValue);
+      } catch (error) {
+        token = storedValue;
+      }
+
+      try {
+        const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+        const res = await fetch(`${baseUrl}/cart?guestToken=${token}`, {
+          headers: {
+            "X-Guest-Token": token,
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!res.ok) return;
+
+        const { data } = await res.json();
+        console.log("fetchCart", data);
+
+        const mappedItems: CartItem[] = data.items.map(
+          (item: CartItemFromBackend) => ({
+            id: item.id,
+            productId: item.productId,
+            title: item.name,
+            description: item.description ?? "",
+            price: item.price,
+            quantity: item.quantity,
+            selectedOptions: item.selectedOptionsDisplay,
+            image: item.imageUrls[0],
+            thaiName: item.thaiName ?? "",
+            subtotal: item.subtotal,
+          }),
+        );
+
+        setItems(mappedItems);
+        setTotalItems(data.totalItems);
+        setTotalPrice(data.totalPrice);
+      } catch (err) {
+        console.error("Failed to restore cart", err);
+      }
+    };
+
+    fetchCart();
+  }, []);
 
   const addItem = (newItem: CartItem) => {
     setItems((prev) => {
@@ -56,8 +108,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   const updateQuantity = (id: string, quantity: number) => {
-    console.log("quantity", quantity);
-
     if (quantity < 1) {
       removeItem(id);
       return;
@@ -69,17 +119,19 @@ export function CartProvider({ children }: { children: ReactNode }) {
     );
   };
 
+  const updateOptions = (id: string, options: SelectedOptions) => {
+    setItems((prev) =>
+      prev.map((item) =>
+        item.id === id ? { ...item, selectedOptions: options } : item,
+      ),
+    );
+  };
+
   const viewCart = () => {
     setOpen(true);
   };
 
   const clearCart = () => setItems([]);
-
-  const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
-  const totalPrice = items.reduce(
-    (sum, item) => sum + Number(item.price) * item.quantity,
-    0,
-  );
 
   return (
     <CartContext.Provider
@@ -88,6 +140,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         addItem,
         removeItem,
         updateQuantity,
+        updateOptions,
         clearCart,
         viewCart,
         open,

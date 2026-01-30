@@ -221,7 +221,7 @@ export default function Header() {
                   router.push(`/search?q=${encodeURIComponent(trimmed)}`);
                 }
               }}
-              className="bg-transparent border-none outline-none text-sm heading py-1 w-35 placeholder:heading"
+              className="bg-transparent border-none outline-none text-sm heading py-1 w-35 placeholder:text-white placeholder:opacity-50"
               autoFocus
             />
             <button

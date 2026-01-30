@@ -28,7 +28,7 @@ interface SingleMenuProps {
 export default function SingleMenu({ menuItem }: SingleMenuProps) {
   const router = useRouter();
   const [selectedImage, setSelectedImage] = useState(0);
-  const { items, updateQuantity } = useCart();
+  const { items, updateQuantity, updateOptions } = useCart();
   const cartItem = items.find((item) => item.id === menuItem.id);
   const [quantity, setQuantity] = useState(cartItem?.quantity || 1);
   const [selectedOptions, setSelectedOptions] = useState<{
@@ -53,13 +53,16 @@ export default function SingleMenu({ menuItem }: SingleMenuProps) {
   };
 
   useEffect(() => {
-    // Only update if cartItem quantity exists and differs from current quantity
     if (cartItem?.quantity !== undefined && cartItem.quantity !== quantity) {
       setQuantity(cartItem?.quantity);
     }
   }, [cartItem?.quantity]);
 
-  const handleOptionChange = (opt: MenuItemOption, value: string | null) => {
+  const handleOptionChange = (
+    id: string,
+    opt: MenuItemOption,
+    value: string | null,
+  ) => {
     if (!value) return;
 
     setSelectedOptions({
@@ -67,8 +70,13 @@ export default function SingleMenu({ menuItem }: SingleMenuProps) {
       displayName: opt.option.displayName,
       value: value,
     });
+    updateOptions(id, {
+      id: opt.optionId,
+      displayName: opt.option.displayName,
+      value: value,
+    });
   };
-  
+
   return (
     <section className="pt-32 pb-16 primary_background">
       <div className="container mx-auto px-6">
@@ -81,7 +89,7 @@ export default function SingleMenu({ menuItem }: SingleMenuProps) {
                 src={menuItem.imageUrls[selectedImage]}
                 alt={menuItem.name}
                 fill
-                className="object-contain"
+                className="object-cover"
                 priority
               />
             </div>
@@ -99,7 +107,7 @@ export default function SingleMenu({ menuItem }: SingleMenuProps) {
                     src={img}
                     alt={`${menuItem.name} view ${index + 1}`}
                     fill
-                    className="object-contain bg-muted"
+                    className="object-fill secondary_background"
                   />
                 </button>
               ))}
@@ -140,7 +148,7 @@ export default function SingleMenu({ menuItem }: SingleMenuProps) {
                             : ""
                         }
                         onValueChange={(value) =>
-                          handleOptionChange(opt, value || "")
+                          handleOptionChange(menuItem.id, opt, value || "")
                         }
                       >
                         <ComboboxInput
@@ -174,7 +182,11 @@ export default function SingleMenu({ menuItem }: SingleMenuProps) {
                                 selectedOptions?.value === list
                               }
                               onChange={(e) =>
-                                handleOptionChange(opt, e.target.value)
+                                handleOptionChange(
+                                  menuItem.id,
+                                  opt,
+                                  e.target.value,
+                                )
                               }
                             />
                             <span>{list}</span>
@@ -231,13 +243,13 @@ export default function SingleMenu({ menuItem }: SingleMenuProps) {
               type="single"
               collapsible
               defaultValue="shipping"
-              className="max-w-lg text-(--color-header2)"
+              className="max-w-lg heading"
             >
               <AccordionItem value="shipping">
                 <AccordionTrigger className="text-xl hover:no-underline">
                   What are your Ingredients?
                 </AccordionTrigger>
-                <AccordionContent className="text-(--color-header2)">
+                <AccordionContent className="heading">
                   {menuItem.ingredients}
                 </AccordionContent>
               </AccordionItem>

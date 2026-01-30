@@ -6,22 +6,24 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const loadTheme = async () => {
       try {
-        const response = await fetch("/theme/data.json");
-        const data = await response.json();
-        console.log("Loaded theme data:", data);
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/themes/selected`,
+        );
+        const {
+          data: { theme },
+        } = await response.json();
+        console.log("Loaded theme data:", theme.colors);
 
-        if (!data?.theme || !Array.isArray(data.theme)) {
+        if (!theme) {
           return;
         }
 
-        const selectedTheme = data.theme.find(
-          (t: { selected: boolean }) => t.selected === true,
-        );
+        const themeToApply = theme.colors ;
+        console.log("themeToApply",themeToApply);
+        
 
-        const themeToApply = selectedTheme || data.theme[0];
-
-        if (themeToApply?.colors) {
-          applyTheme(themeToApply.colors);
+        if (themeToApply) {
+          // applyTheme(themeToApply);
         }
       } catch (error) {
         console.error("Failed to load theme:", error);
@@ -36,6 +38,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
 function applyTheme(colors: Record<string, string>) {
   Object.entries(colors).forEach(([key, value]) => {
+    console.log("value",value);
+    
     document.documentElement.style.setProperty(`--color-${key}`, value);
   });
 }
