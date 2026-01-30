@@ -6,6 +6,8 @@ import { useState } from "react";
 import { z } from "zod";
 import VerifyEmail from "@/components/VerifyEmailModal";
 import { toast } from "sonner";
+import { useUser } from "@/components/UserContext";
+import { useCart } from "@/components/CartContext";
 
 const checkoutSchema = z.object({
   email: z
@@ -27,6 +29,10 @@ export default function CheckoutPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [open, setOpen] = useState(false);
 
+  const { user } = useUser();
+
+  const { items } = useCart();
+
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -37,36 +43,95 @@ export default function CheckoutPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrors({});
     setIsSubmitting(true);
 
-    const result = checkoutSchema.safeParse(formData);
+    try {
+      const result = checkoutSchema.safeParse(formData);
 
-    if (!result.success) {
-      const fieldErrors: { email?: string; phone?: string } = {};
+      if (!result.success) {
+        const fieldErrors: { email?: string; phone?: string } = {};
 
-      result.error.issues.forEach((err) => {
-        const field = err.path[0] as keyof typeof fieldErrors;
-        fieldErrors[field] = err.message;
+        for (const issue of result.error.issues) {
+          const field = issue.path[0] as keyof typeof fieldErrors;
+          // keep first message per field (prevents overwriting)
+          if (!fieldErrors[field]) fieldErrors[field] = issue.message;
+        }
+
+        setErrors(fieldErrors);
+        return;
+      }
+
+      const payload = {
+        items: items.map((it) => ({
+          productId: it.productId ?? it.id, // use productId if you have it, fallback to id
+          quantity: it.quantity,
+        })),
+        email: result.data.email,
+        phoneNumber: result.data.phone,
+      };
+
+      // basic guard: empty cart
+      if (!payload.items.length) {
+        // if you have a toast system, show it here
+        // toast({ title: "Cart is empty", description: "Add at least 1 item." })
+        return;
+      }
+
+      // 3) Guest token header
+      // Change key name if you stored it differently.
+
+      let token;
+      const storedValue = localStorage.getItem("accessToken");
+
+      if (!storedValue) return;
+
+      try {
+        token = JSON.parse(storedValue);
+      } catch (error) {
+        token = storedValue;
+      }
+      console.log("token", token);
+
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/orders`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
       });
 
-      setErrors(fieldErrors);
+      if (!res.ok) {
+        let data: any = null;
+        try {
+          data = await res.json();
+        } catch {
+          // ignore JSON parse errors
+        }
+
+        if (data?.errors) {
+          setErrors({
+            email: data.errors.email,
+            phone: data.errors.phoneNumber,
+          });
+          return;
+        }
+        console.log("checkout data", data);
+        throw new Error(data?.message || `Checkout failed (${res.status})`);
+      }
+      router.push("/order_success");
+    } catch (err) {
+      console.error(err);
+      // toast({ title: "Something went wrong", description: String(err) });
+    } finally {
       setIsSubmitting(false);
-      return;
     }
-
-    // Simulate order processing
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    // toast({
-    //   title: "Order Placed",
-    //   description: "Thank you for your order! We'll contact you shortly.",
-    // });
-
-    setIsSubmitting(false);
-    router.push("/order_success");
   };
 
   const handleVerifyEmail = async () => {
+    console.log("handleVerifyEmail");
+
     try {
       const result = checkoutSchema.safeParse(formData);
 
@@ -83,16 +148,28 @@ export default function CheckoutPage() {
         setIsSubmitting(false);
         return;
       }
+
+      let token;
+      const storedValue = localStorage.getItem("accessToken");
+
+      if (!storedValue) return;
+
+      try {
+        token = JSON.parse(storedValue);
+      } catch (error) {
+        token = storedValue;
+      }
+
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/auth/send-verification-email`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
           },
           body: JSON.stringify({
             email: formData.email,
-            phone: formData.phone,
           }),
         },
       );
@@ -113,8 +190,6 @@ export default function CheckoutPage() {
       toast.error(error.message || "An error occurred. Please try again.");
     }
   };
-
-  const user = false;
 
   const onPlaceOrder = (e: React.MouseEvent) => {
     console.log("onPlaceOrder");

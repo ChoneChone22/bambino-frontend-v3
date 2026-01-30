@@ -43,7 +43,7 @@ export default function Header() {
             className="logo max-w-20 xl:max-w-30"
           >
             <g
-              clip-path="url(#clip0_667_5454)"
+              clipPath="url(#clip0_667_5454)"
               filter="url(#filter0_g_667_5454)"
             >
               <path

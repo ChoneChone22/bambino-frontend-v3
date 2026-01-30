@@ -53,7 +53,7 @@ export default function Footer() {
                 className="logo max-w-20 xl:max-w-30"
               >
                 <g
-                  clip-path="url(#clip0_667_5454)"
+                  clipPath="url(#clip0_667_5454)"
                   filter="url(#filter0_g_667_5454)"
                 >
                   <path
@@ -100,7 +100,7 @@ export default function Footer() {
                   />
                 </g>
                 <defs>
-                  <filter
+                  {/* <filter
                     id="filter0_g_667_5454"
                     x="24.3305"
                     y="12.5478"
@@ -109,7 +109,7 @@ export default function Footer() {
                     filterUnits="userSpaceOnUse"
                     color-interpolation-filters="sRGB"
                   >
-                    <feFlood flood-opacity="0" result="BackgroundImageFix" />
+                    <feFlood floodOpacity="0" result="BackgroundImageFix" />
                     <feBlend
                       mode="normal"
                       in="SourceGraphic"
@@ -169,7 +169,7 @@ export default function Footer() {
                     <feMerge result="effect1_texture_667_5454">
                       <feMergeNode in="displacedImage" />
                     </feMerge>
-                  </filter>
+                  </filter> */}
                   <clipPath id="clip0_667_5454">
                     <rect
                       width="206.41"

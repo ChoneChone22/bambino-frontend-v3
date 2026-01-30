@@ -31,7 +31,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
-  const [totalItems, setTotalItems] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
   const [open, setOpen] = useState(false);
 
@@ -107,19 +107,63 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setItems((prev) => prev.filter((item) => item.id !== id));
   };
 
-  const updateQuantity = (id: string, quantity: number) => {
-    if (quantity < 1) {
-      removeItem(id);
-      return;
-    }
+  // const updateQuantity = (id: string, quantity: number) => {
+  //   if (quantity < 1) {
+  //     removeItem(id);
+  //     return;
+  //   }
+  //   setItems((prev) =>
+  //     prev.map((item) =>
+  //       item.id === id ? { ...item, quantity: quantity } : item,
+  //     ),
+  //   );
+  // };
+
+  const updateQuantity = async (productId: string, quantity: number) => {
+    // if user sets 0 => remove locally (and optionally call delete API if you have one)
+    // if (quantity < 1) {
+    //   removeItem(productId);
+    //   return;
+    // }
+
+    // optimistic update (save previous items for rollback)
+    const prevItems = items;
     setItems((prev) =>
       prev.map((item) =>
-        item.id === id ? { ...item, quantity: quantity } : item,
+        item.productId === productId ? { ...item, quantity } : item,
       ),
     );
+
+    try {
+      const token = localStorage.getItem("token"); 
+
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/cart/items/${productId}`,
+        {
+          method: "PUT", // or "PUT" if your backend uses PUT
+          headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+          body: JSON.stringify({ quantity }),
+        },
+      );
+
+      if (!res.ok) {
+        setItems(prevItems);
+        throw new Error("Failed to update quantity");
+      }
+
+      // Optional: if backend returns updated cart/items, you can re-sync here:
+      // const data = await res.json();
+      // setItems(mapBackendItemsToCartItems(data.items));
+    } catch (err) {
+      setItems(prevItems);
+      console.error(err);
+    }
   };
 
-  const updateOptions = (id: string, options: SelectedOptions) => {
+  const updateOptions = (id: string, options: SelectedOptionDisplay) => {
     setItems((prev) =>
       prev.map((item) =>
         item.id === id ? { ...item, selectedOptions: options } : item,

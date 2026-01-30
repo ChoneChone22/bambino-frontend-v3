@@ -33,6 +33,7 @@ export default function SignIn() {
       );
 
       const data = await res.json();
+      console.log("login data", data);
 
       if (!res.ok) {
         throw new Error(data.message || "Failed to submit form");
@@ -43,6 +44,14 @@ export default function SignIn() {
         email: "",
         password: "",
       });
+      localStorage.setItem(
+        "accessToken",
+        JSON.stringify(data.data.tokens.accessToken),
+      );
+      localStorage.setItem(
+        "refreshToken",
+        JSON.stringify(data.data.tokens.refreshToken),
+      );
     } catch (error: any) {
       console.log(error);
       toast.error(error.message || "An error occurred. Please try again.");

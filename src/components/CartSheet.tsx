@@ -24,7 +24,6 @@ export default function CartSheet() {
   } = useCart();
 
   const router = useRouter();
-  console.log("item", items);
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
