@@ -303,7 +303,7 @@ export default function Header() {
       )}
 
       {isMenuOpen && (
-        <div className="xl:hidden absolute top-full left-0 right-0 bg-(--color-background) text-(--color-header1) border-t border-(--color-border)">
+        <div className="xl:hidden absolute top-full left-0 right-0 primary_background heading1 z-50">
           <div className="flex flex-col px-6 py-4 gap-4">
             <Link
               href="/"

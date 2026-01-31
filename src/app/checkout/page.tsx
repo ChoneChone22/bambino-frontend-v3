@@ -214,9 +214,9 @@ export default function CheckoutPage() {
                 className="flex items-center gap-2 text-xs uppercase tracking-ultra-wide nav-link transition-colors"
               >
                 <ArrowLeft size={16} />
-                <span className="">Back to Menu</span>
+                <span className="hidden xl:block">Back to Menu</span>
               </Link>
-              <Link href="/" className="w-15 xl:w-40">
+              <Link href="/" className="w-15 xl:w-40 ml-15 xl:ml-0">
                 <svg
                   width="256"
                   height="98"
