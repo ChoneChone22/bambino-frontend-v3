@@ -33,7 +33,6 @@ export default function CheckoutPage() {
 
   const { items } = useCart();
   console.log("checkout", items);
-  console.log("user", user);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -69,11 +68,12 @@ export default function CheckoutPage() {
         items: items.map((it) => ({
           productId: it.productId ?? it.id, // use productId if you have it, fallback to id
           quantity: it.quantity,
-          selectedOptions: it.selectedOptions,
+          selectedOptions: it.selectedOptions ?? {},
         })),
         email: result.data.email,
         phoneNumber: result.data.phone,
       };
+      console.log("pay", payload);
 
       if (!payload.items.length) {
         toast.info("Add at least 1 item to Cart.");

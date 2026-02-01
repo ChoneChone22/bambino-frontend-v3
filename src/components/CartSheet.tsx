@@ -15,7 +15,6 @@ import { useRouter } from "next/navigation";
 export default function CartSheet() {
   const {
     items,
-    totalItems,
     totalPrice,
     updateQuantity,
     removeItem,
