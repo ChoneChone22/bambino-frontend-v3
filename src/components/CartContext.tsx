@@ -53,10 +53,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
 
     try {
-      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-      const url = user
-        ? `${baseUrl}/cart`
-        : `${baseUrl}/cart?guestToken=${encodeURIComponent(token)}`;
+      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL!;
+
+      const url =
+        user || !token
+          ? `${baseUrl}/cart`
+          : `${baseUrl}/cart?guestToken=${encodeURIComponent(token)}`;
 
       const res = await fetch(url, {
         headers: {
