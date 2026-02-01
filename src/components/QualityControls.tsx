@@ -1,6 +1,7 @@
 import { MenuItemWithUserSelections } from "@/types/api/menuItem";
 import { useCart } from "@/components/CartContext";
 import { ShoppingCart } from "lucide-react";
+import { useUser } from "@/components/UserContext";
 
 export default function QuantityControls({
   item,
@@ -10,6 +11,8 @@ export default function QuantityControls({
   const { items, addItem, viewCart, fetchCart } = useCart();
   const cartItem = items.find((i) => i.id === item.id);
   const quantity = cartItem?.quantity || 0;
+
+  const { user } = useUser();
 
   const handleAdd = async () => {
     const firstOpt = item.productOptions?.[0];
@@ -23,7 +26,6 @@ export default function QuantityControls({
       productId: item.id,
       quantity: item.quantity ?? 1,
     };
-    console.log("handleAdd", item);
 
     if (item.selectedOptions) {
       payload.selectedOptions = {
@@ -37,33 +39,25 @@ export default function QuantityControls({
 
     console.log("payload", payload);
 
+    const isGuest = !user;
+
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/cart/items`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          credentials: "include",
+          ...(isGuest ? {} : { credentials: "include" as const }),
           body: JSON.stringify(payload),
         },
       );
 
       const data = await res.json();
+      console.log("QCdata", data);
 
       if (!res.ok) throw new Error(data.message || "Failed to add item");
 
       localStorage.setItem("token", JSON.stringify(data.data.guestToken));
-
-      // addItem({
-      //   id: item.id,
-      //   title: item.name,
-      //   description: item.description,
-      //   price: item.price,
-      //   quantity: payload.quantity,
-      //   selectedOptions: item.selectedOptions ? [item.selectedOptions] : [],
-      //   thaiName: item.thaiName,
-      //   image: item.imageUrls[0],
-      // });
       fetchCart();
     } catch (err: any) {
       console.error(err.message);

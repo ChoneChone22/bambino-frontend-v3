@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function SignIn() {
   const [showPassword, setShowPassword] = useState(false);
@@ -12,6 +13,8 @@ export default function SignIn() {
     email: "",
     password: "",
   });
+
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
@@ -34,7 +37,6 @@ export default function SignIn() {
       );
 
       const data = await res.json();
-      console.log("login data", data);
 
       if (!res.ok) {
         throw new Error(data.message || "Failed to submit form");
@@ -53,6 +55,7 @@ export default function SignIn() {
         "refreshToken",
         JSON.stringify(data.data.tokens.refreshToken),
       );
+      router.push("/");
     } catch (error: any) {
       console.log(error);
       toast.error(error.message || "An error occurred. Please try again.");

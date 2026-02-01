@@ -46,7 +46,6 @@ export default function CheckoutPage() {
     e.preventDefault();
     setErrors({});
     setIsSubmitting(true);
-    console.log("handleSubmit");
 
     try {
       const result = checkoutSchema.safeParse(formData);
@@ -73,7 +72,6 @@ export default function CheckoutPage() {
         email: result.data.email,
         phoneNumber: result.data.phone,
       };
-      console.log("pay", payload);
 
       if (!payload.items.length) {
         toast.info("Add at least 1 item to Cart.");
