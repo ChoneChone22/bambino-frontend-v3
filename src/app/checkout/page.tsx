@@ -32,6 +32,7 @@ export default function CheckoutPage() {
   const { user } = useUser();
 
   const { items } = useCart();
+  console.log("checkout", items);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -66,20 +67,16 @@ export default function CheckoutPage() {
         items: items.map((it) => ({
           productId: it.productId ?? it.id, // use productId if you have it, fallback to id
           quantity: it.quantity,
+          selectedOptions: it.selectedOptions,
         })),
         email: result.data.email,
         phoneNumber: result.data.phone,
       };
 
-      // basic guard: empty cart
       if (!payload.items.length) {
-        // if you have a toast system, show it here
-        // toast({ title: "Cart is empty", description: "Add at least 1 item." })
+        toast.info("Add at least 1 item to Cart.");
         return;
       }
-
-      // 3) Guest token header
-      // Change key name if you stored it differently.
 
       let token;
       const storedValue = localStorage.getItem("accessToken");
@@ -91,7 +88,6 @@ export default function CheckoutPage() {
       } catch (error) {
         token = storedValue;
       }
-      console.log("token", token);
 
       const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/orders`, {
         method: "POST",
@@ -99,6 +95,7 @@ export default function CheckoutPage() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
+        credentials: "include",
         body: JSON.stringify(payload),
       });
 
@@ -121,9 +118,9 @@ export default function CheckoutPage() {
         throw new Error(data?.message || `Checkout failed (${res.status})`);
       }
       router.push("/order_success");
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      // toast({ title: "Something went wrong", description: String(err) });
+      toast(err.message);
     } finally {
       setIsSubmitting(false);
     }
@@ -192,8 +189,6 @@ export default function CheckoutPage() {
   };
 
   const onPlaceOrder = (e: React.MouseEvent) => {
-    console.log("onPlaceOrder");
-
     if (!user) {
       setOpen(true);
       return;

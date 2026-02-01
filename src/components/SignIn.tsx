@@ -25,6 +25,7 @@ export default function SignIn() {
           headers: {
             "Content-Type": "application/json",
           },
+          credentials: "include",
           body: JSON.stringify({
             email: form.email,
             password: form.password,
