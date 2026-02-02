@@ -2,12 +2,13 @@
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { z } from "zod";
 import VerifyEmail from "@/components/VerifyEmailModal";
 import { toast } from "sonner";
 import { useUser } from "@/components/UserContext";
 import { useCart } from "@/components/CartContext";
+import { fetchWithAuth } from "@/utils/api";
 
 const checkoutSchema = z.object({
   email: z
@@ -34,6 +35,14 @@ export default function CheckoutPage() {
   const { items } = useCart();
   console.log("checkout", items);
 
+  useEffect(() => {
+    console.log("CartProvider mounted");
+  }, []);
+
+  useEffect(() => {
+    console.log("Cart items changed", items);
+  }, [items]);
+
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -42,6 +51,87 @@ export default function CheckoutPage() {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
+  // const handleSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   setErrors({});
+  //   setIsSubmitting(true);
+
+  //   try {
+  //     const result = checkoutSchema.safeParse(formData);
+
+  //     if (!result.success) {
+  //       const fieldErrors: { email?: string; phone?: string } = {};
+
+  //       for (const issue of result.error.issues) {
+  //         const field = issue.path[0] as keyof typeof fieldErrors;
+  //         // keep first message per field (prevents overwriting)
+  //         if (!fieldErrors[field]) fieldErrors[field] = issue.message;
+  //       }
+
+  //       setErrors(fieldErrors);
+  //       return;
+  //     }
+
+  //     const payload = {
+  //       items: items.map((it) => ({
+  //         productId: it.productId ?? it.id,
+  //         quantity: it.quantity,
+  //         selectedOptions: it.selectedOptions ?? {},
+  //       })),
+  //       email: result.data.email,
+  //       phoneNumber: result.data.phone,
+  //     };
+
+  //     console.log("payload", payload);
+
+  //     if (!payload.items.length) {
+  //       toast.info("Add at least 1 item to Cart.");
+  //       return;
+  //     }
+
+  //     const storedValue = localStorage.getItem("accessToken");
+
+  //     if (!storedValue) return;
+
+  //     const token = storedValue;
+
+  //     const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/orders`, {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //       credentials: "include",
+  //       body: JSON.stringify(payload),
+  //     });
+
+  //     if (!res.ok) {
+  //       let data: any = null;
+  //       try {
+  //         data = await res.json();
+  //       } catch {
+  //         // ignore JSON parse errors
+  //       }
+
+  //       if (data?.errors) {
+  //         setErrors({
+  //           email: data.errors.email,
+  //           phone: data.errors.phoneNumber,
+  //         });
+  //         return;
+  //       }
+  //       console.log("checkout data", data);
+  //       throw new Error(data?.message || `Checkout failed (${res.status})`);
+  //     }
+  //     router.push("/order_success");
+  //   } catch (err: any) {
+  //     console.error(err);
+  //     toast(err.message);
+  //   } finally {
+  //     setIsSubmitting(false);
+  //   }
+  // };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({});
@@ -49,23 +139,20 @@ export default function CheckoutPage() {
 
     try {
       const result = checkoutSchema.safeParse(formData);
-
       if (!result.success) {
         const fieldErrors: { email?: string; phone?: string } = {};
-
         for (const issue of result.error.issues) {
           const field = issue.path[0] as keyof typeof fieldErrors;
           // keep first message per field (prevents overwriting)
           if (!fieldErrors[field]) fieldErrors[field] = issue.message;
         }
-
         setErrors(fieldErrors);
         return;
       }
 
       const payload = {
         items: items.map((it) => ({
-          productId: it.productId ?? it.id, // use productId if you have it, fallback to id
+          productId: it.productId ?? it.id,
           quantity: it.quantity,
           selectedOptions: it.selectedOptions ?? {},
         })),
@@ -73,31 +160,24 @@ export default function CheckoutPage() {
         phoneNumber: result.data.phone,
       };
 
+      console.log("payload", payload);
+
       if (!payload.items.length) {
         toast.info("Add at least 1 item to Cart.");
         return;
       }
 
-      let token;
-      const storedValue = localStorage.getItem("accessToken");
-
-      if (!storedValue) return;
-
-      try {
-        token = JSON.parse(storedValue);
-      } catch (error) {
-        token = storedValue;
-      }
-
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/orders`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+      const res = await fetchWithAuth(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/orders`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
         },
-        credentials: "include",
-        body: JSON.stringify(payload),
-      });
+        !!user,
+      );
 
       if (!res.ok) {
         let data: any = null;
@@ -114,9 +194,11 @@ export default function CheckoutPage() {
           });
           return;
         }
+
         console.log("checkout data", data);
         throw new Error(data?.message || `Checkout failed (${res.status})`);
       }
+
       router.push("/order_success");
     } catch (err: any) {
       console.error(err);
@@ -128,59 +210,34 @@ export default function CheckoutPage() {
 
   const handleVerifyEmail = async () => {
     setIsSubmitting(true);
-
     try {
       const result = checkoutSchema.safeParse(formData);
-
       if (!result.success) {
         const fieldErrors: { email?: string; phone?: string } = {};
-
         result.error.issues.forEach((err) => {
           const field = err.path[0] as keyof typeof fieldErrors;
           fieldErrors[field] = err.message;
         });
-
         setErrors(fieldErrors);
         return;
       }
 
-      // Access token (logged-in users)
-      let accessToken: string | null = null;
-      const storedAccessValue = localStorage.getItem("accessToken");
-      if (storedAccessValue) {
-        try {
-          accessToken = JSON.parse(storedAccessValue);
-        } catch {
-          accessToken = storedAccessValue;
-        }
-      }
+      // Get guest token for request body
+      const guestToken = localStorage.getItem("token");
 
-      // Guest token (guests)
-      let guestToken: string | null = null;
-      const storedGuestValue = localStorage.getItem("token");
-      if (storedGuestValue) {
-        try {
-          guestToken = JSON.parse(storedGuestValue);
-        } catch {
-          guestToken = storedGuestValue;
-        }
-      }
-
-      const res = await fetch(
+      const res = await fetchWithAuth(
         `${process.env.NEXT_PUBLIC_BASE_URL}/auth/send-verification-email`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
-            ...(guestToken ? { "X-Guest-Token": guestToken } : {}),
           },
-          credentials: "include",
           body: JSON.stringify({
             email: formData.email,
             ...(guestToken ? { guestToken } : {}),
           }),
         },
+        !!user,
       );
 
       const data = await res.json().catch(() => ({}));
@@ -200,7 +257,9 @@ export default function CheckoutPage() {
   };
 
   const onPlaceOrder = (e: React.MouseEvent) => {
-    if (user && !user.emailVerified) {
+    const emailVerified = localStorage.getItem("emailVerified") === "true";
+
+    if ((!user || !user.emailVerified) && !emailVerified) {
       setOpen(true);
       return;
     }

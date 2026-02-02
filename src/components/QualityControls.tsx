@@ -2,15 +2,17 @@ import { MenuItemWithUserSelections } from "@/types/api/menuItem";
 import { useCart } from "@/components/CartContext";
 import { ShoppingCart } from "lucide-react";
 import { useUser } from "@/components/UserContext";
+import { useState } from "react";
 
 export default function QuantityControls({
   item,
 }: {
   item: MenuItemWithUserSelections;
 }) {
-  const { items, addItem, viewCart, fetchCart } = useCart();
+  const { items, viewCart, fetchCart } = useCart();
   const cartItem = items.find((i) => i.id === item.id);
   const quantity = cartItem?.quantity || 0;
+  const [loading, setLoading] = useState(false);
 
   const { user } = useUser();
 
@@ -37,16 +39,18 @@ export default function QuantityControls({
       };
     }
 
-    console.log("payload", payload);
-
     const isGuest = !user;
-
+    const guestToken = localStorage.getItem("token");
     try {
+      setLoading(true);
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/cart/items`,
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            ...(guestToken ? { "X-Guest-Token": guestToken } : {}),
+          },
           ...(isGuest ? {} : { credentials: "include" as const }),
           body: JSON.stringify(payload),
         },
@@ -57,10 +61,12 @@ export default function QuantityControls({
 
       if (!res.ok) throw new Error(data.message || "Failed to add item");
 
-      localStorage.setItem("token", JSON.stringify(data.data.guestToken));
+      localStorage.setItem("token", data.data.guestToken);
       fetchCart();
     } catch (err: any) {
       console.error(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -72,8 +78,16 @@ export default function QuantityControls({
           className="flex items-center text-xs gap-2 p-1 lg:p-2 secondary_btn border border_border rounded-3xl tracking-wider transition-colors"
           aria-label={`Add ${item.name} to cart`}
         >
-          <ShoppingCart className="w-4 h-4" />
-          Add To Cart
+          {loading ? (
+            <span className="flex items-center">
+              <span className="animate-spin h-4 w-4 rounded-full border-2 border_border border-t-transparent" />
+            </span>
+          ) : (
+            <span className="flex items-center gap-2">
+              <ShoppingCart className="w-4 h-4" />
+              <span>Add To Cart</span>
+            </span>
+          )}
         </button>
       ) : (
         <div className="flex items-center gap-1">

@@ -66,17 +66,21 @@ export default function SingleMenu({ menuItem }: SingleMenuProps) {
   ) => {
     if (!value) return;
 
+    if (!cartItem) return;
+
     setSelectedOptions({
       id: opt.optionId,
       displayName: opt.option.displayName,
       value: value,
     });
-    updateOptions(id, {
+    
+    updateOptions(cartItem.id, {
       id: opt.optionId,
       displayName: opt.option.displayName,
       value: value,
     });
   };
+  console.log("Cartitem", cartItem);
   console.log("menuItem", menuItem);
 
   return (

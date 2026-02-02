@@ -38,7 +38,7 @@ export interface ProductOption {
 }
 
 export interface SelectedOptionDisplay {
-  id?: string;
+  id: string;
   displayName: string;
   value: string;
 }

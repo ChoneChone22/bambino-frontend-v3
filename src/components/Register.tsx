@@ -122,12 +122,22 @@ export default function Register() {
 
             <button
               type="submit"
-              className="w-full inline-block mt-10 px-8 py-3 primary_btn text-sm rounded-3xl tracking-wider uppercase transition-all duration-300"
               disabled={isLoading}
+              className={`
+    w-full mt-10 px-8 py-3
+    primary_btn text-sm rounded-3xl tracking-wider uppercase
+    transition-all duration-300
+    flex items-center justify-center gap-2
+    ${isLoading ? "opacity-80 cursor-not-allowed" : ""}
+  `}
             >
               {isLoading ? (
-                <span className="flex items-center gap-2">
-                  <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                <>
+                  <svg
+                    className="animate-spin h-4 w-4"
+                    viewBox="0 0 24 24"
+                    aria-hidden
+                  >
                     <circle
                       className="opacity-25"
                       cx="12"
@@ -143,17 +153,16 @@ export default function Register() {
                       d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                     />
                   </svg>
-                  Processing...
-                </span>
+                  <span>Processing…</span>
+                </>
               ) : (
                 "CREATE ACCOUNT"
               )}
             </button>
+
             <div className="flex items-center justify-center">
               <div className="space-x-2 flex items-center">
-                <p className="heading">
-                  Already have an account?
-                </p>
+                <p className="heading">Already have an account?</p>
                 <Link
                   href="/my_account"
                   className="text-(--color-primary) text-center underline"

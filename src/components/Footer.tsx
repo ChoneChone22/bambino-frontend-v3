@@ -167,7 +167,7 @@ export default function Footer() {
           <div className="mt-8">
             <h4 className="text-sm tracking-wider heading mb-6">CONTACT</h4>
             <ul className="space-y-4">
-              <li className="flex items-start gap-3 map_link">
+              <li className="flex items-start gap-3 nav-link ">
                 <MapPin className="h-5 w-5 mt-0.5 footer shrink-0" />
                 <a
                   href="https://g.page/r/CbAEnxeLhkl0ECA/review"
@@ -180,7 +180,7 @@ export default function Footer() {
                   Maha Nakhon, Bangkok 10330
                 </a>
               </li>
-              <li className="flex items-start gap-3 map_link">
+              <li className="flex items-start gap-3 nav-link">
                 <MapPin className="footer h-5 w-5 mt-0.5 shrink-0" />
                 <a
                   href="https://maps.app.goo.gl/nCvULtwA2Gs7pEDdA"
@@ -203,7 +203,7 @@ export default function Footer() {
                   +1 (212) 555-1234
                 </a>
               </li> */}
-              <li className="flex items-center gap-3 map_link">
+              <li className="flex items-center gap-3 nav-link">
                 <Mail className="h-5 w-5 sub_heading shrink-0" />
                 <a href="BamBite@Totals-Inc.com" className="transition-colors">
                   BamBite@Totals-Inc.com

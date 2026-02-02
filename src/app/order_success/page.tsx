@@ -58,9 +58,12 @@ export default function Checkout() {
         {/* Hero */}
         <section className="pt-32 pb-12 primary_background heading">
           <div className="container mx-auto px-6 text-center">
-            <h1 className="font-serif text-2xl md:text-3xl font-semibold mb-8">
-              Send us order details to confirm your order
+            <h1 className="font-serif text-2xl md:text-3xl font-semibold mb-2">
+              Thanks for your order!
             </h1>
+            <p className="font-serif text-sm mb-8">
+              You can reach out to us for more.
+            </p>
 
             <div className="max-w-md mx-auto space-y-4">
               {socials.map((social) => (

@@ -28,6 +28,7 @@ export interface User {
 
 interface UserContextType {
   user: User | null;
+  authLoading: boolean;
   //   isLoggedIn: boolean;
   //   orders: Order[];
   //   login: (email: string, password: string) => Promise<void>;
@@ -86,8 +87,8 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       }
 
       const data = await res.json();
-      console.log("user",data);
-      
+      console.log("user", data);
+
       setUser(data.data.user);
       setIsLoggedIn(true);
       return true;
@@ -145,7 +146,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   //     setUser(userData.user);
   //     setOrders(userData.orders);
   //     setIsLoggedIn(true);
-  //     localStorage.setItem("currentUser", JSON.stringify({ email }));
+  //     localStorage.setItem("currentUser", email);
   //   };
 
   //   const logout = () => {
@@ -202,6 +203,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     <UserContext.Provider
       value={{
         user,
+        authLoading,
         // isLoggedIn,
         // orders,
         // login,
