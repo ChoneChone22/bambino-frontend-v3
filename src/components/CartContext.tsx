@@ -141,7 +141,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       setItems((prev) => prev.filter((item) => item.productId !== id));
     } catch (err: any) {
       setItems(prevItems);
-      toast.error(err.message)
+      toast.error(err.message);
       console.error(err.message);
     } finally {
       setDeleteLoading(false);
@@ -149,8 +149,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   const updateQuantity = async (productId: string, quantity: number) => {
-    const prevItems = items;
+    if (quantity < 1) {
+      await removeItem(productId);
+      return;
+    }
 
+    const prevItems = items;
     setItems((prev) =>
       prev.map((item) =>
         item.productId === productId ? { ...item, quantity } : item,
@@ -159,7 +163,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
     try {
       setLoading(true);
-
       const res = await fetchWithAuth(
         `${process.env.NEXT_PUBLIC_BASE_URL}/cart/items/${productId}`,
         {
@@ -173,7 +176,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
       );
 
       const data = await res.json();
-
       if (!res.ok) {
         setItems(prevItems);
         throw new Error(data.message || "Failed to update quantity");
@@ -183,7 +185,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     } catch (err: any) {
       setItems(prevItems);
       console.error(err.message);
-      toast.error(err.message)
+      toast.error(err.message);
     } finally {
       setLoading(false);
     }
@@ -227,7 +229,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     } catch (err: any) {
       setItems(prevItems);
       console.error(err.message);
-      toast.error(err.message)
+      toast.error(err.message);
     } finally {
       setLoading(false);
     }
@@ -255,7 +257,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         totalPrice,
         fetchCart,
         loading,
-        deleteLoading
+        deleteLoading,
       }}
     >
       {children}
