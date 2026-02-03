@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useRouter } from "next/navigation";
+import { Suspense } from "react";
 
 interface JobListing {
   id: string;
@@ -61,7 +62,9 @@ export default function Careers() {
 
   return (
     <main className="min-h-screen secondary_background">
-      <Header />
+      <Suspense fallback={<div>Loading...</div>}>
+        <Header />
+      </Suspense>
 
       {/* Main Content Section */}
       <section className="pt-32 pb-16 px-6">
@@ -104,34 +107,34 @@ export default function Careers() {
                         </CardTitle>
                         <div className="flex items-center gap-2 sub_heading">
                           <MapPin size={16} />
-                          <span className="text-sm sub_heading">{job.location}</span>
+                          <span className="text-sm sub_heading">
+                            {job.location}
+                          </span>
                         </div>
                       </CardHeader>
                       <CardContent className="space-y-4">
                         <div className="space-y-3">
                           <div className="flex items-center gap-3">
-                            <Clock
-                              size={16}
-                              className="sub_heading shrink-0"
-                            />
+                            <Clock size={16} className="sub_heading shrink-0" />
                             <div>
                               <p className="text-xs uppercase tracking-wide sub_heading">
                                 Working Hours
                               </p>
-                              <p className="text-sm sub_heading">{job.workingHours}</p>
+                              <p className="text-sm sub_heading">
+                                {job.workingHours}
+                              </p>
                             </div>
                           </div>
 
                           <div className="flex items-center gap-3">
-                            <Phone
-                              size={16}
-                              className="sub_heading shrink-0"
-                            />
+                            <Phone size={16} className="sub_heading shrink-0" />
                             <div>
                               <p className="text-xs uppercase tracking-wide sub_heading">
                                 Contact Number
                               </p>
-                              <p className="text-sm sub_heading">{job.contactNumber}</p>
+                              <p className="text-sm sub_heading">
+                                {job.contactNumber}
+                              </p>
                             </div>
                           </div>
 
@@ -144,7 +147,9 @@ export default function Careers() {
                               <p className="text-xs uppercase tracking-wide sub_heading">
                                 Salary
                               </p>
-                              <p className="text-sm sub_heading">{job.salary}</p>
+                              <p className="text-sm sub_heading">
+                                {job.salary}
+                              </p>
                             </div>
                           </div>
 
@@ -157,7 +162,9 @@ export default function Careers() {
                               <p className="text-xs uppercase tracking-wide sub_heading">
                                 Posted
                               </p>
-                              <p className="text-sm sub_heading">{job.createdDate}</p>
+                              <p className="text-sm sub_heading">
+                                {job.createdDate}
+                              </p>
                             </div>
                           </div>
                         </div>

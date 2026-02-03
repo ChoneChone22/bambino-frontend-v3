@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { Suspense } from "react";
 
 interface JobListing {
   id: string;
@@ -147,15 +148,15 @@ export default async function JobDetailsPage({ params }: PageProps) {
 
   return (
     <main className="min-h-screen secondary_background">
-      <Header />
+      <Suspense fallback={<div>Loading...</div>}>
+        <Header />
+      </Suspense>
 
       <section className="pt-32 pb-16 px-6">
         <div className="container mx-auto max-w-6xl">
           {/* Back Button */}
           <div className="mb-8">
-            <button
-              className="heading2"
-            >
+            <button className="heading2">
               <Link href="/careers" className="flex items-center">
                 <ChevronLeft size={16} className="mr-2" />
                 Back to Careers
@@ -221,71 +222,66 @@ export default async function JobDetailsPage({ params }: PageProps) {
                 <CardContent className="p-6 space-y-5">
                   {/* Location */}
                   <div className="flex items-center gap-3">
-                    <MapPin
-                      size={18}
-                      className="sub_heading shrink-0"
-                    />
+                    <MapPin size={18} className="sub_heading shrink-0" />
                     <div>
                       <p className="text-xs uppercase tracking-wide sub_heading">
                         Office Location
                       </p>
-                      <p className="text-sm font-medium heading">{job.location}</p>
+                      <p className="text-sm font-medium heading">
+                        {job.location}
+                      </p>
                     </div>
                   </div>
 
                   {/* Working Hours */}
                   <div className="flex items-center gap-3">
-                    <Clock
-                      size={18}
-                      className="sub_heading shrink-0"
-                    />
+                    <Clock size={18} className="sub_heading shrink-0" />
                     <div>
                       <p className="text-xs uppercase tracking-wide sub_heading">
                         Working Hours
                       </p>
-                      <p className="text-sm font-medium heading">{job.workingHours}</p>
+                      <p className="text-sm font-medium heading">
+                        {job.workingHours}
+                      </p>
                     </div>
                   </div>
 
                   {/* Contact */}
                   <div className="flex items-center gap-3">
-                    <Phone
-                      size={18}
-                      className="sub_heading shrink-0"
-                    />
+                    <Phone size={18} className="sub_heading shrink-0" />
                     <div>
                       <p className="text-xs uppercase tracking-wide sub_heading">
                         Contact Number
                       </p>
-                      <p className="text-sm font-medium heading">{job.contactNumber}</p>
+                      <p className="text-sm font-medium heading">
+                        {job.contactNumber}
+                      </p>
                     </div>
                   </div>
 
                   {/* Salary */}
                   <div className="flex items-center gap-3">
-                    <DollarSign
-                      size={18}
-                      className="sub_heading shrink-0"
-                    />
+                    <DollarSign size={18} className="sub_heading shrink-0" />
                     <div>
                       <p className="text-xs uppercase tracking-wide sub_heading">
                         Salary
                       </p>
-                      <p className="text-sm font-medium heading">{job.salary}</p>
+                      <p className="text-sm font-medium heading">
+                        {job.salary}
+                      </p>
                     </div>
                   </div>
 
                   {/* Created Date */}
                   <div className="flex items-center gap-3">
-                    <Calendar
-                      size={18}
-                      className="sub_heading shrink-0"
-                    />
+                    <Calendar size={18} className="sub_heading shrink-0" />
                     <div>
                       <p className="text-xs uppercase tracking-wide sub_heading">
                         Posted
                       </p>
-                      <p className="text-sm font-medium heading">{job.createdDate}</p>
+                      <p className="text-sm font-medium heading">
+                        {job.createdDate}
+                      </p>
                     </div>
                   </div>
 
