@@ -115,6 +115,7 @@ export default function CartSheet() {
                       </button>
                       <div className="flex items-center gap-2">
                         <button
+                          disabled={item.quantity <= 1}
                           className="p-1 border rounded-lg primary_border primary_text hover:text-(--color-foreground) hover:bg-(--color-primary) transition-colors"
                           aria-label="Decrease quantity"
                           onClick={() =>

@@ -17,7 +17,7 @@ export default function Quantity({ menuItemId }: { menuItemId: string }) {
 
   return (
     <div className="flex items-center gap-2">
-      <button
+      {/* <button
         className="p-1 border rounded-lg border-(--color-primary) text-(--color-primary) hover:text-(--color-foreground) hover:bg-(--color-primary) transition-colors"
         aria-label="Decrease quantity"
         onClick={decrease}
@@ -33,7 +33,7 @@ export default function Quantity({ menuItemId }: { menuItemId: string }) {
         onClick={increase}
       >
         <Plus className="w-3 h-3" />
-      </button>
+      </button> */}
     </div>
   );
 }

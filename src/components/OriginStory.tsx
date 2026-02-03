@@ -1,5 +1,3 @@
-"use client";
-
 export default function OriginStory() {
   return (
     <section className="relative primary_background py-24 md:py-32 lg:py-40">

@@ -149,7 +149,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   const updateQuantity = async (productId: string, quantity: number) => {
-    if (quantity <= 1) {
+    console.log("updateQuantity",quantity);
+    
+    if (quantity < 1) {
       return;
     }
 
