@@ -58,7 +58,6 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  // Fetch user profile
   const fetchUser = async (): Promise<boolean> => {
     try {
       const res = await fetch(
@@ -73,7 +72,6 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       );
 
       if (res.status === 401) {
-        // Token expired, try to refresh
         const refreshed = await refreshAccessToken();
 
         if (refreshed) {

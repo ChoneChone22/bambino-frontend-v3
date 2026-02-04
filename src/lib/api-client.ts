@@ -10,6 +10,12 @@ export const refreshAuthToken = async (): Promise<boolean> => {
   if (isRestaurantTableRoute()) {
     return false;
   }
+
+  if (!baseURL) {
+    console.error("NEXT_PUBLIC_BASE_URL is not configured");
+    return false;
+  }
+
   try {
     const response = await fetch(`${baseURL}/auth/refresh`, {
       method: "POST",
@@ -18,16 +24,24 @@ export const refreshAuthToken = async (): Promise<boolean> => {
       },
       credentials: "include",
     });
+
     if (!response.ok) {
-      throw new Error("Token refresh failed");
+      if (response.status === 401) {
+        if (typeof window !== "undefined") {
+          localStorage.removeItem("accessToken");
+          localStorage.removeItem("refreshToken");
+        }
+        // Not an error - expected when refresh token expires
+        return false;
+      }
+      // Other errors (500, network issues, etc.)
+      console.error(`Token refresh failed with status: ${response.status}`);
+      return false;
     }
 
     return true;
   } catch (error) {
-    // Redirect to login
-    // if (typeof window !== "undefined") {
-    //   window.location.href = "/login";
-    // }
-    throw error;
+    console.error("Token refresh error:", error);
+    return false;
   }
 };

@@ -25,7 +25,6 @@ export default function CartSheet() {
   } = useCart();
 
   const router = useRouter();
-  console.log("CartSheetitems", items);
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -97,7 +96,7 @@ export default function CartSheet() {
                       {item.selectedOptionsDisplay !== null &&
                         item.selectedOptionsDisplay.length > 0 &&
                         item.selectedOptionsDisplay.map((opt, i) => (
-                          <p className="text-sm heading2 truncate mt-2" key={i}>
+                          <p className="text-sm heading2 mt-2" key={i}>
                             {opt.displayName}: {opt.value}
                           </p>
                         ))}

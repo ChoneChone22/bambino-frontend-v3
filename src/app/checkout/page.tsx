@@ -32,105 +32,19 @@ export default function CheckoutPage() {
 
   const { user } = useUser();
 
-  const { items } = useCart();
-  console.log("checkout", items);
+  const { items, fetchCart, clearCart } = useCart();
 
   useEffect(() => {
-    console.log("CartProvider mounted");
+    fetchCart();
   }, []);
-
-  useEffect(() => {
-    console.log("Cart items changed", items);
-  }, [items]);
 
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >,
+    >
   ) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
-
-  // const handleSubmit = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   setErrors({});
-  //   setIsSubmitting(true);
-
-  //   try {
-  //     const result = checkoutSchema.safeParse(formData);
-
-  //     if (!result.success) {
-  //       const fieldErrors: { email?: string; phone?: string } = {};
-
-  //       for (const issue of result.error.issues) {
-  //         const field = issue.path[0] as keyof typeof fieldErrors;
-  //         // keep first message per field (prevents overwriting)
-  //         if (!fieldErrors[field]) fieldErrors[field] = issue.message;
-  //       }
-
-  //       setErrors(fieldErrors);
-  //       return;
-  //     }
-
-  //     const payload = {
-  //       items: items.map((it) => ({
-  //         productId: it.productId ?? it.id,
-  //         quantity: it.quantity,
-  //         selectedOptions: it.selectedOptions ?? {},
-  //       })),
-  //       email: result.data.email,
-  //       phoneNumber: result.data.phone,
-  //     };
-
-  //     console.log("payload", payload);
-
-  //     if (!payload.items.length) {
-  //       toast.info("Add at least 1 item to Cart.");
-  //       return;
-  //     }
-
-  //     const storedValue = localStorage.getItem("accessToken");
-
-  //     if (!storedValue) return;
-
-  //     const token = storedValue;
-
-  //     const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/orders`, {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Authorization: `Bearer ${token}`,
-  //       },
-  //       credentials: "include",
-  //       body: JSON.stringify(payload),
-  //     });
-
-  //     if (!res.ok) {
-  //       let data: any = null;
-  //       try {
-  //         data = await res.json();
-  //       } catch {
-  //         // ignore JSON parse errors
-  //       }
-
-  //       if (data?.errors) {
-  //         setErrors({
-  //           email: data.errors.email,
-  //           phone: data.errors.phoneNumber,
-  //         });
-  //         return;
-  //       }
-  //       console.log("checkout data", data);
-  //       throw new Error(data?.message || `Checkout failed (${res.status})`);
-  //     }
-  //     router.push("/order_success");
-  //   } catch (err: any) {
-  //     console.error(err);
-  //     toast(err.message);
-  //   } finally {
-  //     setIsSubmitting(false);
-  //   }
-  // };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -143,7 +57,6 @@ export default function CheckoutPage() {
         const fieldErrors: { email?: string; phone?: string } = {};
         for (const issue of result.error.issues) {
           const field = issue.path[0] as keyof typeof fieldErrors;
-          // keep first message per field (prevents overwriting)
           if (!fieldErrors[field]) fieldErrors[field] = issue.message;
         }
         setErrors(fieldErrors);
@@ -160,8 +73,6 @@ export default function CheckoutPage() {
         phoneNumber: result.data.phone,
       };
 
-      console.log("payload", payload);
-
       if (!payload.items.length) {
         toast.info("Add at least 1 item to Cart.");
         return;
@@ -176,7 +87,7 @@ export default function CheckoutPage() {
           },
           body: JSON.stringify(payload),
         },
-        !!user,
+        !!user
       );
 
       if (!res.ok) {
@@ -194,12 +105,11 @@ export default function CheckoutPage() {
           });
           return;
         }
-
-        console.log("checkout data", data);
         throw new Error(data?.message || `Checkout failed (${res.status})`);
       }
 
       router.push("/order_success");
+      clearCart();
     } catch (err: any) {
       console.error(err);
       toast(err.message);
@@ -237,7 +147,7 @@ export default function CheckoutPage() {
             ...(guestToken ? { guestToken } : {}),
           }),
         },
-        !!user,
+        !!user
       );
 
       const data = await res.json().catch(() => ({}));

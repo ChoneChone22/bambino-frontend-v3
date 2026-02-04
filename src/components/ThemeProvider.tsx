@@ -12,7 +12,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         const {
           data: { theme },
         } = await response.json();
-        console.log("Loaded theme data:", theme.colors);
 
         if (!theme) {
           return;

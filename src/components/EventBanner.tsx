@@ -63,6 +63,81 @@ export default function EventBanner() {
     window.matchMedia("(hover: none), (pointer: coarse)").matches;
 
   return (
+    // <section
+    //   className="fixed top-10 left-0 right-0 w-full z-20 xl:z-50 bg-secondary mt-10"
+    //   onMouseEnter={() => {
+    //     if (!isTouch) setIsExpanded(true);
+    //   }}
+    //   onMouseLeave={() => {
+    //     if (!isTouch) setIsExpanded(false);
+    //   }}
+    //   onClick={() => {
+    //     if (isTouch) setIsExpanded((v) => !v);
+    //   }}
+    // >
+    //   <div className="relative flex items-center justify-center px-3 py-2 sm:px-4 sm:py-2.5">
+    //     <p
+    //       className="
+    //   flex flex-wrap items-center justify-center gap-x-2 gap-y-1
+    //   text-xs sm:text-sm
+    //   heading2 tracking-wide
+    //   text-center
+    //   pr-8
+    // "
+    //     >
+    //       <span className="heading2">{eventTitle}</span>
+
+    //       <span className="primary_text hidden sm:inline">—</span>
+
+    //       <span className="font-medium whitespace-nowrap">
+    //         {timeLeft.days}d {timeLeft.hours}h left
+    //       </span>
+
+    //       <ArrowRight size={14} className="hidden sm:inline ml-1" />
+    //     </p>
+
+    //     {/* Close button */}
+    //     <button
+    //       onClick={handleClose}
+    //       className="absolute right-2 sm:right-3 p-1 heading2 transition-colors"
+    //       aria-label="Close banner"
+    //     >
+    //       <X size={14} />
+    //     </button>
+    //   </div>
+
+    //   {/* Expanded State */}
+    //   {isExpanded && (
+    //     <div className="overflow-hidden">
+    //       <div className="py-8 px-6 flex flex-col items-center gap-6">
+    //         {/* Event title */}
+    //         <p className="text-xs uppercase tracking-ultra-wide heading2">
+    //           {eventTitle}
+    //         </p>
+
+    //         {/* Countdown */}
+    //         <div className="flex items-center gap-4 md:gap-8">
+    //           <TimeBlock value={timeLeft.days} label="Days" />
+    //           <span className="heading2 text-2xl font-light">:</span>
+    //           <TimeBlock value={timeLeft.hours} label="Hours" />
+    //           <span className="heading2 text-2xl font-light">:</span>
+    //           <TimeBlock value={timeLeft.minutes} label="Mins" />
+    //           <span className="heading2 text-2xl font-light">:</span>
+    //           <TimeBlock value={timeLeft.seconds} label="Secs" />
+    //         </div>
+
+    //         {/* CTA */}
+    //         <a
+    //           href="#reservations"
+    //           className="text-xs uppercase tracking-ultra-wide primary_text border-b primary_border pb-1 hover:border-primary-foreground transition-colors flex items-center gap-2"
+    //         >
+    //           Reserve Your Spot
+    //           <ArrowRight size={12} />
+    //         </a>
+    //       </div>
+    //     </div>
+    //   )}
+    // </section>
     <section
       className="fixed top-10 left-0 right-0 w-full z-20 xl:z-50 bg-secondary mt-10"
       onMouseEnter={() => {
@@ -78,29 +153,28 @@ export default function EventBanner() {
       <div className="relative flex items-center justify-center px-3 py-2 sm:px-4 sm:py-2.5">
         <p
           className="
-      flex flex-wrap items-center justify-center gap-x-2 gap-y-1
-      text-xs sm:text-sm
-      heading2 tracking-wide
-      text-center
-      pr-8
-    "
+        flex flex-wrap items-center justify-center gap-x-2 gap-y-1
+        text-xs sm:text-sm
+        heading2 tracking-wide
+        text-center
+        pr-8
+      "
         >
-          <span className="heading2">{eventTitle}</span>
-
-          <span className="primary_text hidden sm:inline">—</span>
-
-          <span className="font-medium whitespace-nowrap">
-            {timeLeft.days}d {timeLeft.hours}h left
-          </span>
+          {/* Main line */}
+          <span className="heading2">Membership is open!!!</span>
 
           <ArrowRight size={14} className="hidden sm:inline ml-1" />
         </p>
 
         {/* Close button */}
         <button
-          onClick={handleClose}
+          onClick={(e) => {
+            e.stopPropagation(); // keep banner toggle behavior clean
+            handleClose(e);
+          }}
           className="absolute right-2 sm:right-3 p-1 heading2 transition-colors"
           aria-label="Close banner"
+          type="button"
         >
           <X size={14} />
         </button>
@@ -109,29 +183,21 @@ export default function EventBanner() {
       {/* Expanded State */}
       {isExpanded && (
         <div className="overflow-hidden">
-          <div className="py-8 px-6 flex flex-col items-center gap-6">
-            {/* Event title */}
-            <p className="text-xs uppercase tracking-ultra-wide heading2">
-              {eventTitle}
+          <div className="py-3 px-6 flex flex-col items-center gap-5">
+
+            <p className="text-center text-xl heading2 max-w-md">
+              Apply now to get member-only updates, priority access, and special
+              opportunities. It takes less than a minute!
             </p>
 
-            {/* Countdown */}
-            <div className="flex items-center gap-4 md:gap-8">
-              <TimeBlock value={timeLeft.days} label="Days" />
-              <span className="heading2 text-2xl font-light">:</span>
-              <TimeBlock value={timeLeft.hours} label="Hours" />
-              <span className="heading2 text-2xl font-light">:</span>
-              <TimeBlock value={timeLeft.minutes} label="Mins" />
-              <span className="heading2 text-2xl font-light">:</span>
-              <TimeBlock value={timeLeft.seconds} label="Secs" />
-            </div>
-
-            {/* CTA */}
             <a
-              href="#reservations"
+              href="https://docs.google.com/forms/d/e/1FAIpQLSd_uT4U_l4ovM8u6cTGQibC2wMlPtWvBBhG7v2lto5OObFc6Q/viewform"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()} // don't collapse/toggle banner when clicking CTA
               className="text-xs uppercase tracking-ultra-wide primary_text border-b primary_border pb-1 hover:border-primary-foreground transition-colors flex items-center gap-2"
             >
-              Reserve Your Spot
+              Apply Membership
               <ArrowRight size={12} />
             </a>
           </div>

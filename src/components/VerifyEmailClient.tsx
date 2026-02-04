@@ -37,7 +37,7 @@ export default function VerifyEmailClient() {
 
         toast.success(data.message);
         localStorage.setItem("emailVerified", "true");
-        router.push("/");
+        router.push("/checkout");
       } catch (err: any) {
         console.error(err);
         toast.error(err.message || "Something went wrong");

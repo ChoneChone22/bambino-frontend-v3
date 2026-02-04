@@ -4,8 +4,7 @@ export async function fetchWithAuth(
   user: boolean,
 ) {
   if (!user) {
-    const guestToken = localStorage.getItem("token");
-    console.log("guestToken", guestToken);
+    const guestToken = localStorage.getItem("token")
 
     return fetch(url, {
       ...options,

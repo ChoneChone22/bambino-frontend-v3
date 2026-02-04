@@ -80,8 +80,6 @@ export default function SingleMenu({ menuItem }: SingleMenuProps) {
       value: value,
     });
   };
-  console.log("Cartitem", cartItem);
-  console.log("menuItem", menuItem);
 
   return (
     <section className="pt-32 pb-16 primary_background">

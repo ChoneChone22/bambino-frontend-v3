@@ -41,6 +41,7 @@ export default function QuantityControls({
 
     const isGuest = !user;
     const guestToken = localStorage.getItem("token");
+    
     try {
       setLoading(true);
       const res = await fetch(

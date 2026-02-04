@@ -15,6 +15,7 @@ import {
 import { useUser } from "./UserContext";
 import { fetchWithAuth } from "@/utils/api";
 import { toast } from "sonner";
+import { useRef, useCallback } from "react";
 
 interface CartContextType {
   items: CartItem[];
@@ -44,13 +45,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
 
-  const fetchCart = async () => {
+  const fetchCart = useCallback(async () => {
     try {
       const guestToken = localStorage.getItem("token");
-
       const baseUrl = process.env.NEXT_PUBLIC_BASE_URL!;
 
-      // Build URL with query param for guest users (if not authenticated via cookie)
       const url =
         !user && guestToken
           ? `${baseUrl}/cart?guestToken=${encodeURIComponent(guestToken)}`
@@ -64,7 +63,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
             "Content-Type": "application/json",
           },
         },
-        !!user,
+        !!user
       );
 
       if (!res.ok) return;
@@ -84,22 +83,25 @@ export function CartProvider({ children }: { children: ReactNode }) {
           image: item.imageUrls[0],
           thaiName: item.thaiName ?? "",
           subtotal: item.subtotal,
-        }),
+        })
       );
 
       setItems(mappedItems);
       setTotalItems(data.totalItems);
       setTotalPrice(data.totalPrice);
+      if (!guestToken) {
+        localStorage.setItem("token", data.guestToken);
+      }
     } catch (err) {
       console.error("Failed to restore cart", err);
     }
-  };
+  }, []);
 
   useEffect(() => {
     if (authLoading) return;
 
     fetchCart();
-  }, [user, authLoading]);
+  }, []);
 
   const addItem = (newItem: CartItem) => {
     setItems((prev) => {
@@ -108,7 +110,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         return prev.map((item) =>
           item.id === newItem.id
             ? { ...item, quantity: item.quantity + 1 }
-            : item,
+            : item
         );
       }
 
@@ -129,7 +131,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
             "Content-Type": "application/json",
           },
         },
-        !!user,
+        !!user
       );
 
       const data = await res.json();
@@ -148,53 +150,108 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const updateQuantity = async (productId: string, quantity: number) => {
-    console.log("updateQuantity",quantity);
-    
-    if (quantity < 1) {
-      return;
-    }
+  // const updateQuantity = async (productId: string, quantity: number) => {
+  //   if (quantity < 1) {
+  //     return;
+  //   }
 
-    const prevItems = items;
-    setItems((prev) =>
-      prev.map((item) =>
-        item.productId === productId ? { ...item, quantity } : item,
-      ),
-    );
+  //   const prevItems = items;
+  //   setItems((prev) =>
+  //     prev.map((item) =>
+  //       item.productId === productId ? { ...item, quantity } : item
+  //     )
+  //   );
 
-    try {
-      setLoading(true);
-      const res = await fetchWithAuth(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/cart/items/${productId}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ quantity }),
-        },
-        !!user,
+  //   try {
+  //     setLoading(true);
+  //     const res = await fetchWithAuth(
+  //       `${process.env.NEXT_PUBLIC_BASE_URL}/cart/items/${productId}`,
+  //       {
+  //         method: "PUT",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify({ quantity }),
+  //       },
+  //       !!user
+  //     );
+
+  //     const data = await res.json();
+  //     if (!res.ok) {
+  //       setItems(prevItems);
+  //       throw new Error(data.message || "Failed to update quantity");
+  //     }
+
+  //     await fetchCart();
+  //   } catch (err: any) {
+  //     setItems(prevItems);
+  //     console.error(err.message);
+  //     toast.error(err.message);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  const timersRef = useRef<Record<string, ReturnType<typeof setTimeout>>>({});
+
+  useEffect(() => {
+    const timers = timersRef.current;
+
+    return () => {
+      Object.values(timers).forEach(clearTimeout);
+    };
+  }, []);
+
+  const updateQuantity = useCallback(
+    (productId: string, quantity: number) => {
+      if (quantity < 1) return;
+
+      // 1) update UI immediately
+      setItems((prev) =>
+        prev.map((item) =>
+          item.productId === productId ? { ...item, quantity } : item
+        )
       );
 
-      const data = await res.json();
-      if (!res.ok) {
-        setItems(prevItems);
-        throw new Error(data.message || "Failed to update quantity");
+      // 2) reset timer for this product
+      if (timersRef.current[productId]) {
+        clearTimeout(timersRef.current[productId]);
       }
 
-      await fetchCart();
-    } catch (err: any) {
-      setItems(prevItems);
-      console.error(err.message);
-      toast.error(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+      // 3) call API after user "chills"
+      timersRef.current[productId] = setTimeout(async () => {
+        try {
+          setLoading(true);
+
+          const res = await fetchWithAuth(
+            `${process.env.NEXT_PUBLIC_BASE_URL}/cart/items/${productId}`,
+            {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ quantity }),
+            },
+            !!user
+          );
+
+          const data = await res.json();
+          if (!res.ok)
+            throw new Error(data.message || "Failed to update quantity");
+
+          await fetchCart();
+        } catch (err: any) {
+          toast.error(err.message);
+          await fetchCart();
+        } finally {
+          setLoading(false);
+        }
+      }, 800);
+    },
+    [fetchCart, user]
+  );
 
   const updateOptions = async (
     cartId: string,
-    selectedOptions: SelectedOptionDisplay,
+    selectedOptions: SelectedOptionDisplay
   ) => {
     const prevItems = items;
 
@@ -216,7 +273,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
           },
           body: JSON.stringify({ ...payload }),
         },
-        !!user,
+        !!user
       );
 
       const data = await res.json();
@@ -240,7 +297,39 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setOpen(true);
   };
 
-  const clearCart = () => setItems([]);
+  const clearCart = async () => {
+    const prevItems = items;
+
+    try {
+      setLoading(true);
+
+      const res = await fetchWithAuth(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/cart`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+        !!user
+      );
+      
+      const data =
+        res.headers.get("content-length") !== "0" ? await res.json() : null;
+
+      if (!res.ok) {
+        throw new Error(data?.message || "Failed to delete cart");
+      }
+
+      setItems([]);
+    } catch (err: any) {
+      setItems(prevItems);
+      console.error(err);
+      toast.error(err.message || "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <CartContext.Provider
