@@ -1,11 +1,5 @@
 import { fetchWithAccessRefresh } from "./fetch-with-refresh";
-
-export type User = {
-  id: string;
-  email: string;
-  name?: string;
-  // add your fields
-};
+import { User } from "@/components/UserContext";
 
 export async function fetchUserProfile(): Promise<User | null> {
   const baseURL = process.env.NEXT_PUBLIC_BASE_URL!;

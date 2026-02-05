@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { refreshAuthToken } from "@/lib/api-client";
+// import { refreshAuthToken } from "@/lib/api-client";
 import { fetchUserProfile } from "@/lib/user-api";
 import { clearTokens } from "@/lib/auth-token";
 
@@ -142,16 +142,16 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   // Set up token refresh interval (optional - refresh before expiry)
-  useEffect(() => {
-    if (!isLoggedIn) return;
+  // useEffect(() => {
+  //   if (!isLoggedIn) return;
 
-    // Refresh token every 14 minutes if access token expires in 15 minutes
-    const interval = setInterval(async () => {
-      await refreshAccessToken();
-    }, 14 * 60 * 1000); // 14 minutes
+  //   // Refresh token every 14 minutes if access token expires in 15 minutes
+  //   const interval = setInterval(async () => {
+  //     await refreshAccessToken();
+  //   }, 14 * 60 * 1000); // 14 minutes
 
-    return () => clearInterval(interval);
-  }, [isLoggedIn]);
+  //   return () => clearInterval(interval);
+  // }, [isLoggedIn]);
 
   //   const login = async (email: string, password: string) => {
   //     await new Promise((resolve) => setTimeout(resolve, 500));
