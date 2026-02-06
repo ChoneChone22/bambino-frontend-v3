@@ -5,7 +5,6 @@ export default function OriginStory() {
 
       <div className="mx-auto max-w-6xl px-6">
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-20">
-
           <div>
             <span className="mb-4 inline-block text-sm font-medium uppercase tracking-[0.2em] primary_text">
               Chapter One
@@ -21,16 +20,18 @@ export default function OriginStory() {
              "
           >
             <p className="text-lg leading-relaxed md:text-xl body">
-              {
-                "What begins in Bam's world - his discoveries, his creativity, his joyful little recipes - is now being shared with you. Every dish is an invitation to connect, to feel comfort, and to experience new flavours carried from his home to yours, wherever you are."
-              }
-            </p>
-            <p className="mt-6 text-lg leading-relaxed body md:text-xl">
-              No matter how much the world changes, Bam believes one thing will
-              always stay the same:{" "}
-              <span className="font-medium primary_text">
-                food is happiness, comfort, and connection.
-              </span>
+              Hi, <span className="font-medium primary_text">I’m Bam</span> .
+              Welcome to my imaginative little world where familiar flavors meet
+              new ideas and every bite becomes a joyful adventure. Bambite is
+              the way of connecting generations, cultures, and experiences
+              through food. Inspired by cuisines from across Asia, we explore
+              flavors, techniques, and dishes beyond the familiar with
+              creativity and care. The result is food that feels comforting and
+              approachable, yet a little unexpected — offering something new
+              while still feeling right at home. At{" "}
+              <span className="font-medium primary_text">BamBite</span>,every
+              dish is an invitation to discover, enjoy, and have fun through
+              flavor.
             </p>
           </div>
         </div>
@@ -41,13 +42,16 @@ export default function OriginStory() {
         >
           <div className="mx-auto max-w-3xl text-center">
             <div className="mb-6 inline-flex items-center gap-2 rounded-full primary_btn px-4 py-2">
-              <span className="text-sm font-medium">
-                Our Mission
-              </span>
+              <span className="text-sm font-medium">Our Mission</span>
             </div>
-            <p className="font-serif text-2xl leading-relaxed sub_heading md:text-3xl lg:text-4xl">
-              BamBite exists to connect cultures, generations, and moments
-              through the simple happiness of great food.
+            <p className="font-serif text-2xl leading-relaxed sub_heading">
+              BamBite is dedicated to creating food that brings people closer
+              and makes every meal enjoyable. We focus on preparing dishes with
+              care, quality ingredients, and attention to detail so customers
+              feel welcomed and valued. By exploring new ideas while respecting
+              cultural roots, we aim to serve food that creates happy memories,
+              encourages sharing, and leaves people feeling satisfied and
+              connected.
             </p>
           </div>
         </div>

@@ -5,43 +5,41 @@ const benefits = [
     icon: Building2,
     title: "Proven Business Model",
     description:
-      "Join a successful brand with established operations and processes.",
+      "A strong and recognizable brand.",
   },
   {
     icon: TrendingUp,
     title: "Strong ROI",
     description:
-      "Benefit from our track record of consistent growth and profitability.",
+      "A tested business model with real results",
   },
   {
     icon: Users,
     title: "Comprehensive Training",
     description:
-      "Full support from site selection to grand opening and beyond.",
+      "Training, operational support, and marketing guidance",
   },
   {
     icon: Award,
     title: "Brand Recognition",
-    description: "Leverage our reputation for excellence in fine dining.",
+    description: "A growing community that believes in shared success",
   },
 ];
 export default function FranchiseSection() {
   return (
-    <section
-      id="franchise"
-      className="py-24 md:py-32 secondary_background"
-    >
+    <section id="franchise" className="py-24 md:py-32 secondary_background">
       <div className="max-w-6xl mx-auto px-6 md:px-12">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           <div>
-            <p className="font-serif heading2 text-4xl font-medium leading-tight md:text-5xl lg:text-6xl text-balance mb-4">
-              Franchise Opportunity
+            <p className="font-serif heading2 text-4xl font-medium leading-tight md:text-5xl lg:text-6xl text-balance mb-8">
+              Franchise With Us
             </p>
-            <p className="heading2 leading-relaxed mb-8">
-              We are expanding and looking for passionate partners to bring the
-              Terroir experience to new locations. Join our family of
-              restaurateurs and be part of a culinary legacy built on
-              excellence, innovation, and unforgettable dining experiences.
+            <p className="heading2 font-serif text-2xl font-medium leading-relaxed mb-4"> Partner with a Growing Restaurant Brand</p>
+            <p className="heading2 leading-relaxed">
+              We are excited to invite passionate entrepreneurs and investors to
+              become part of our growing restaurant family. Our brand is built
+              on quality food, exceptional service, and a proven business model
+              designed for long-term success.
             </p>
           </div>
 
@@ -52,7 +50,9 @@ export default function FranchiseSection() {
                 className="p-6 border secondary_border transition-colors rounded-lg"
               >
                 <benefit.icon className="w-8 h-8 mb-4 heading2" />
-                <h3 className="font-serif text-xl mb-2 heading2">{benefit.title}</h3>
+                <h3 className="font-serif text-xl mb-2 heading2">
+                  {benefit.title}
+                </h3>
                 <p className="heading2 text-sm leading-relaxed">
                   {benefit.description}
                 </p>

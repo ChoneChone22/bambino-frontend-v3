@@ -101,7 +101,7 @@ export default function HeaderClient() {
       </div>
 
       {/* Mobile Search Bar */}
-      {isSearchOpen && (
+      {/* {isSearchOpen && (
         <div className="xl:hidden px-6 pb-4">
           <div className="flex items-center gap-2 border border-(--color-border) rounded-3xl px-3 py-1">
             <Search className="w-4 h-4 heading" />
@@ -128,6 +128,38 @@ export default function HeaderClient() {
             >
               <X className="w-4 h-4" />
             </button>
+          </div>
+        </div>
+      )} */}
+
+      {isSearchOpen && (
+        <div className="xl:hidden fixed left-0 right-0 top-0 z-60 primary_background border-b border_border">
+          <div className="px-4 py-3">
+            <div className="flex items-center gap-2 border border_border rounded-3xl px-3 py-2">
+              <Search className="w-4 h-4 heading shrink-0" />
+              <Input
+                type="text"
+                placeholder="Search menu..."
+                value={searchQuery}
+                onChange={handleChange}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    handleSearchSubmit();
+                  }
+                }}
+                className="bg-transparent border-none outline-none text-sm heading flex-1 placeholder:text-muted-foreground focus-visible:ring-0"
+              />
+              <button
+                onClick={
+                  searchQuery ? handleRemove : () => setIsSearchOpen(false)
+                }
+                className="p-1 nav-link"
+                aria-label={searchQuery ? "Clear search" : "Close search"}
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
           </div>
         </div>
       )}

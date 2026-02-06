@@ -19,6 +19,7 @@ import { useRef, useCallback } from "react";
 
 interface CartContextType {
   items: CartItem[];
+  setItems: React.Dispatch<React.SetStateAction<CartItem[]>>;
   addItem: (item: CartItem) => void;
   removeItem: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
@@ -44,17 +45,16 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const { user, authLoading } = useUser();
   const [loading, setLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
-
+  
   const fetchCart = useCallback(async () => {
     try {
       const guestToken = localStorage.getItem("token");
       const baseUrl = process.env.NEXT_PUBLIC_BASE_URL!;
-
       const url =
         !user && guestToken
           ? `${baseUrl}/cart?guestToken=${encodeURIComponent(guestToken)}`
           : `${baseUrl}/cart`;
-
+          
       const res = await fetchWithAuth(
         url,
         {
@@ -95,13 +95,13 @@ export function CartProvider({ children }: { children: ReactNode }) {
     } catch (err) {
       console.error("Failed to restore cart", err);
     }
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     if (authLoading) return;
 
     fetchCart();
-  }, []);
+  }, [user]);
 
   const addItem = (newItem: CartItem) => {
     setItems((prev) => {
@@ -293,6 +293,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     <CartContext.Provider
       value={{
         items,
+        setItems,
         addItem,
         removeItem,
         updateQuantity,

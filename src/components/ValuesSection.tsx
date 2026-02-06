@@ -18,7 +18,7 @@ const values = [
   {
     title: "Innovation with Purpose",
     description:
-      "We push creative boundaries to make every flavor and experience feel meaningful. Through thoughtful research, experimentation, and intentional recipe design, we transform inspiration into dishes that surprise and delight.",
+      "We push creative boundaries to make every flavor and experience feel meaningful. Through thoughtful research, experimentation, and intentional recipe design, we transform inspiration into dishes that surprise and delight. From ingredient selection to flavor balance and product design, our innovations are rooted in real quality and crafted to elevate every bite while connecting people through joyful food experiences.",
     image: "/hero.jpg",
   },
   {

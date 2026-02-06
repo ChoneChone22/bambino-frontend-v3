@@ -1,9 +1,8 @@
 import Header from "@/components/Header";
-import MyAccountHeroSection from "@/components/MyAccountHeroSection";
 import Footer from "@/components/Footer";
 import { CartProvider } from "@/components/CartContext";
 import { Suspense } from "react";
-import RegisterGate from "@/components/RegisterGate";
+import RegisterContent from "@/components/RegisterContent";
 
 export default function RegisterPage() {
   return (
@@ -12,10 +11,7 @@ export default function RegisterPage() {
         <Suspense fallback={<div>Loading...</div>}>
           <Header />
         </Suspense>
-        <div className="pt-16">
-          <MyAccountHeroSection />
-          <RegisterGate />
-        </div>
+        <RegisterContent />
         <Footer />
       </main>
     </CartProvider>

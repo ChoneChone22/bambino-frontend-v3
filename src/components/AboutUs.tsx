@@ -7,7 +7,7 @@ export default function AboutSection() {
         {/* Section Label */}
         <div className="mb-6">
           <span className="text-sm font-medium uppercase tracking-widest text-(--color-primary)">
-            Our Story
+            This is how BamBite has started
           </span>
         </div>
 
@@ -16,33 +16,19 @@ export default function AboutSection() {
           {/* Left Column - Text Content */}
           <div className="space-y-8">
             <h2 className="font-serif text-4xl font-medium leading-tight heading md:text-5xl lg:text-6xl text-balance">
-              About Us
+              About Bambite
             </h2>
 
             <div className="space-y-6 text-lg leading-relaxed">
               <p className="body">
-                Hi, I&apos;m Bam. Welcome to my imaginative little world where
-                familiar flavors meet new ideas and every bite becomes a joyful
-                adventure.
-              </p>
-
-              <p className="body">
-                <span className="font-semibold primary_text">BamBite</span> is
-                the way of connecting generations, cultures, and experiences
-                through food. Inspired by cuisines from across Asia, we explore
-                flavors, techniques, and dishes beyond the familiar with
-                creativity and care.
-              </p>
-
-              <p className="body">
-                The result is food that feels comforting and approachable, yet a
-                little unexpected — offering something new while still feeling
-                right at home.
-              </p>
-
-              <p className="font-medium body italic border-l-4 primary_border pl-6">
-                &quot;At BamBite, every dish is an invitation to discover,
-                enjoy, and have fun through flavor.&quot;
+                What begins in  <span className="font-semibold primary_text">Bam&apos;s</span> world - his discoveries, his creativity,
+                his joyful little recipes - is now being shared with you. Every
+                dish is an invitation to connect, to feel comfort, and to
+                experience new flavours carried from his home to yours, wherever
+                you are. No matter how much the world changes, Bam believes one
+                thing will always stay the same: food is happiness, comfort, and
+                connection. BamBite exists to connect cultures, generations, and
+                moments through the simple happiness of great food.
               </p>
             </div>
 

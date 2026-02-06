@@ -3,7 +3,11 @@ export async function fetchWithAuth(
   options: RequestInit = {},
   user: boolean,
 ) {
+  console.log("fetchWithAuth",user);
+  
   if (!user) {
+    console.log("no user work");
+    
     const guestToken = localStorage.getItem("token")
 
     return fetch(url, {
@@ -15,6 +19,7 @@ export async function fetchWithAuth(
     });
   }
 
+  console.log("yes user work");
   let res = await fetch(url, {
     ...options,
     credentials: "include",

@@ -3,13 +3,14 @@ import { useCart } from "@/components/CartContext";
 import { ShoppingCart } from "lucide-react";
 import { useUser } from "@/components/UserContext";
 import { useState } from "react";
+import { CartItem } from "@/types/api/cart";
 
 export default function QuantityControls({
   item,
 }: {
   item: MenuItemWithUserSelections;
 }) {
-  const { items, viewCart, fetchCart } = useCart();
+  const { items, viewCart, fetchCart, setItems } = useCart();
   const cartItem = items.find((i) => i.id === item.id);
   const quantity = cartItem?.quantity || 0;
   const [loading, setLoading] = useState(false);
@@ -17,6 +18,7 @@ export default function QuantityControls({
   const { user } = useUser();
 
   const handleAdd = async () => {
+    setLoading(true);
     const firstOpt = item.productOptions?.[0];
     const firstValue = firstOpt?.option?.optionLists?.[0];
 
@@ -41,9 +43,59 @@ export default function QuantityControls({
 
     const isGuest = !user;
     const guestToken = localStorage.getItem("token");
-    
+
+    const optimisticItem: CartItem = {
+      id: `temp-${Date.now()}`, // temporary ID
+      productId: item.id,
+      title: item.name,
+      description: item.description,
+      thaiName: item.thaiName,
+      image: item.imageUrls?.[0] || "",
+      price: item.price,
+      quantity: payload.quantity,
+      subtotal: parseFloat(item.price) * payload.quantity,
+      selectedOptions: payload.selectedOptions || {},
+      selectedOptionsDisplay: payload.selectedOptions
+        ? Object.entries(payload.selectedOptions).map(([optionId, value]) => {
+            const productOption = item.productOptions?.find(
+              (po) => po.optionId === optionId
+            );
+            return {
+              id: optionId,
+              displayName:
+                productOption?.option?.displayName ||
+                productOption?.option?.name ||
+                "Option",
+              value: value as string,
+            };
+          })
+        : null,
+    };
+
+    setItems((prevItems) => {
+      const existingIndex = prevItems.findIndex(
+        (cartItem) =>
+          cartItem.productId === item.id &&
+          JSON.stringify(cartItem.selectedOptions) ===
+            JSON.stringify(payload.selectedOptions)
+      );
+      if (existingIndex !== -1) {
+        const updated = [...prevItems];
+        updated[existingIndex] = {
+          ...updated[existingIndex],
+          quantity: updated[existingIndex].quantity + payload.quantity,
+          subtotal:
+            (updated[existingIndex].quantity + payload.quantity) *
+            parseFloat(item.price),
+        };
+        return updated;
+      } else {
+        return [...prevItems, optimisticItem];
+      }
+    });
+    setLoading(false);
+
     try {
-      setLoading(true);
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/cart/items`,
         {
@@ -54,11 +106,10 @@ export default function QuantityControls({
           },
           ...(isGuest ? {} : { credentials: "include" as const }),
           body: JSON.stringify(payload),
-        },
+        }
       );
 
       const data = await res.json();
-      console.log("QCdata", data);
 
       if (!res.ok) throw new Error(data.message || "Failed to add item");
 
@@ -66,10 +117,10 @@ export default function QuantityControls({
       fetchCart();
     } catch (err: any) {
       console.error(err.message);
-    } finally {
-      setLoading(false);
     }
   };
+
+  console.log("items", items);
 
   return (
     <div className="flex items-center gap-3">

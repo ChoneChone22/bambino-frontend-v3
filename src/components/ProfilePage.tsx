@@ -8,14 +8,13 @@ import { useState } from "react";
 import ProfileSection from "./ProfileSection";
 import OrdersSection from "./OrdersSection";
 import PasswordSection from "./PasswordSection";
-import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 type TabType = "profile" | "orders" | "password";
 
 export default function ProfilePage() {
   const { user, logout, updateProfile, authLoading } = useUser();
 
-  // const { logout, updateProfile } = useUser();
   const [activeTab, setActiveTab] = useState<TabType>("profile");
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
@@ -24,6 +23,8 @@ export default function ProfilePage() {
     profileImageUrl: user?.profileImageUrl || null,
   });
   const [isSaving, setIsSaving] = useState(false);
+
+  const router = useRouter();
 
   const handleSaveProfile = async () => {
     setIsSaving(true);
@@ -39,9 +40,9 @@ export default function ProfilePage() {
     }
   };
 
-  const handleLogout = () => {
-    // logout();
-    window.location.href = "/";
+  const handleLogout = async () => {
+    await logout();
+    router.replace("/");
   };
 
   if (!user) {

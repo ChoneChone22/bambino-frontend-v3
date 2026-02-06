@@ -52,17 +52,20 @@ export default function SingleMenu({ menuItem }: SingleMenuProps) {
     setQuantity(newQuantity);
     updateQuantity(id, newQuantity);
   };
-
+  
   useEffect(() => {
     if (cartItem?.quantity !== undefined && cartItem.quantity !== quantity) {
       setQuantity(cartItem?.quantity);
     }
-  }, [cartItem?.quantity]);
+    if (cartItem?.selectedOptionsDisplay) {
+      setSelectedOptions(cartItem?.selectedOptionsDisplay[0]);
+    }
+  }, [cartItem]);
 
   const handleOptionChange = (
     id: string,
     opt: MenuItemOption,
-    value: string | null,
+    value: string | null
   ) => {
     if (!value) return;
 
@@ -73,7 +76,7 @@ export default function SingleMenu({ menuItem }: SingleMenuProps) {
       displayName: opt.option.displayName,
       value: value,
     });
-    
+
     updateOptions(cartItem.id, {
       id: opt.optionId,
       displayName: opt.option.displayName,
@@ -189,7 +192,7 @@ export default function SingleMenu({ menuItem }: SingleMenuProps) {
                                 handleOptionChange(
                                   menuItem.id,
                                   opt,
-                                  e.target.value,
+                                  e.target.value
                                 )
                               }
                             />

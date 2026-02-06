@@ -8,7 +8,6 @@ import VerifyEmail from "@/components/VerifyEmailModal";
 import { toast } from "sonner";
 import { useUser } from "@/components/UserContext";
 import { useCart } from "@/components/CartContext";
-import { fetchWithAuth } from "@/utils/api";
 
 const checkoutSchema = z.object({
   email: z
@@ -35,16 +34,17 @@ export default function CheckoutPage() {
   const { items, fetchCart, clearCart } = useCart();
 
   useEffect(() => {
-    if (user) {
-      fetchUser();
-    } else {
-      fetchGuestUser();
-    }
+    fetchUser(); 
+    fetchGuestUser();
+  }, []);
+
+  useEffect(() => {
     const guestToken = localStorage.getItem("token");
-    if (!!user || !!guestToken) {
+
+    if (user || guestToken) {
       fetchCart();
     }
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     if (user) {

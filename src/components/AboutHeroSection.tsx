@@ -27,7 +27,7 @@ export default function AboutHeroSection() {
             BamBite
           </h1>
           <p className="mt-6 text-lg sub_heading md:text-xl">
-            Food is happiness, comfort, and connection
+            Discover, Enjoy, and Have Fun through flavor.
           </p>
         </div>
       </div>

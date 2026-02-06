@@ -25,6 +25,7 @@ export default function CartSheet() {
   } = useCart();
 
   const router = useRouter();
+  console.log("items", items);
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -157,7 +158,6 @@ export default function CartSheet() {
                 type="button"
                 onClick={(e) => {
                   e.preventDefault();
-                  console.log("before checkout push", items);
                   router.push("/checkout");
                 }}
                 className="w-full primary_btn rounded-xl mb-4 py-4 text-sm tracking-wider uppercase"

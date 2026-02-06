@@ -3,8 +3,8 @@
 import { User } from "@/components/UserContext";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Edit2 } from "lucide-react";
+import Image from "next/image";
 
 interface ProfileSectionProps {
   user: User;
@@ -27,13 +27,20 @@ export default function ProfileSection({
   onSave,
   onFormChange,
 }: ProfileSectionProps) {
+  const memberId = user.memberId ?? "";
+  const memberQrCodeUrl = user.memberQrCodeUrl ?? "";
+  const points =
+    typeof user.points === "number" && !Number.isNaN(user.points)
+      ? user.points
+      : null;
+  console.log("points", points);
+
   return (
     <div className="space-y-6">
       <Card className="p-6">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold heading">
-            Profile Information
-          </h2>
+          <h2 className="text-2xl font-bold heading">Profile Information</h2>
+
           {!isEditing && (
             <Button
               onClick={onEdit}
@@ -56,8 +63,7 @@ export default function ProfileSection({
                 type="email"
                 value={user.email}
                 disabled
-                className="w-full px-0 py-3 sub_heading secondary_background card border-b primary_border placeholder:heading focus:outline-none focus:primary_border disabled:opacity-50
-    disabled:cursor-not-allowed transition-colors"
+                className="w-full px-0 py-3 sub_heading secondary_background card border-b primary_border placeholder:heading focus:outline-none focus:primary_border disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               />
               <p className="text-xs text-muted-foreground mt-1">
                 Email cannot be changed
@@ -93,7 +99,8 @@ export default function ProfileSection({
             </div>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-6">
+            {/* Basic profile */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <p className="text-sm text-muted-foreground mb-1">Email</p>
@@ -104,6 +111,51 @@ export default function ProfileSection({
                 <p className="font-medium text-foreground">{user.name}</p>
               </div>
             </div>
+            {/* Membership (view-only) */}
+            <div className="pt-6 border-t border-border">
+              <h3 className="text-lg font-semibold heading mb-4">Membership</h3>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                <div className="space-y-4">
+                  {memberId && (
+                    <div>
+                      <p className="text-sm text-muted-foreground mb-1">
+                        Member ID
+                      </p>
+                      <p className="font-medium text-foreground">{memberId}</p>
+                    </div>
+                  )}
+
+                  {points !== null && (
+                    <div>
+                      <p className="text-sm text-muted-foreground mb-1">
+                        Points
+                      </p>
+                      <p className="font-medium text-foreground">{points}</p>
+                    </div>
+                  )}
+                </div>
+
+                {memberQrCodeUrl && (
+                  <div className="md:justify-self-end">
+                    <p className="text-sm text-muted-foreground mb-2">
+                      Member QR Code
+                    </p>
+
+                    <div className="relative w-44 h-44 rounded-xl border border-border bg-white overflow-hidden">
+                      <Image
+                        src={memberQrCodeUrl}
+                        alt="Member QR code"
+                        fill
+                        className="object-contain"
+                        sizes="176px"
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+            )
           </div>
         )}
       </Card>

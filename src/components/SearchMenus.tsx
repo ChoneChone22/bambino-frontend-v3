@@ -11,14 +11,14 @@ export default function SearchMenus({ SearchMenus }: SearchMenusProps) {
   const quantity = 1;
   const selectedOptions = null;
   return (
-    <section className="py-12 md:py-16 bg-(--color-background)">
+    <section className="py-12 md:py-16 secondary_background">
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-8">
           {SearchMenus.length > 0 ? (
             SearchMenus.map((item) => (
               <div
                 key={item.id}
-                className="group flex flex-col h-full bg-(--color-background) p-1 rounded-md"
+                className="group flex flex-col h-full primary_background p-1 rounded-md"
               >
                 <div className="relative aspect-square overflow-hidden mb-2">
                   <Image
@@ -32,19 +32,19 @@ export default function SearchMenus({ SearchMenus }: SearchMenusProps) {
                 </div>
                 <div className="flex flex-col flex-1 p-2">
                   <div className="flex-1">
-                    <h3 className="font-serif text-xl mb-2 text-(--color-header1)">
+                    <h3 className="font-serif text-xl mb-2 heading">
                       {item.name}
                     </h3>
-                    <p className="font-serif text-sm mb-2 text-(--color-header1)">
+                    <p className="font-serif text-sm mb-2 heading">
                       {item.thaiName}
                     </p>
-                    <p className="text-(--color-header1) text-sm line-clamp-2">
+                    <p className="sub_heading text-sm line-clamp-2">
                       {item.description}
                     </p>
                   </div>
-                  <div className="mt-4 text-(--color-title)">
+                  <div className="mt-4">
                     <div className="flex flex-col sm:flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-4">
-                      <span className="font-serif text-(--color-header2) text-lg">{`฿${item.price}`}</span>
+                      <span className="font-serif heading text-lg">{`฿${item.price}`}</span>
                       <div className="w-full md:w-auto">
                         <QuantityControls
                           item={{ ...item, quantity, selectedOptions }}

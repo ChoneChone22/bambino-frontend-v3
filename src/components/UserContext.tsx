@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { fetchUserProfile } from "@/lib/user-api";
 import { clearTokens } from "@/lib/auth-token";
 import { toast } from "sonner";
+import { fetchWithAuth } from "@/utils/api";
 
 export interface Order {
   id: string;
@@ -26,6 +27,9 @@ export interface User {
 
   createdAt: string;
   updatedAt: string;
+  memberId?: string | null;
+  memberQrCodeUrl?: string | null;
+  points?: number | null;
 }
 
 export interface GuestUser {
@@ -52,7 +56,7 @@ interface UserContextType {
   //   isLoggedIn: boolean;
   //   orders: Order[];
   //   login: (email: string, password: string) => Promise<void>;
-  //   logout: () => void;
+  logout: () => void;
   updateProfile: (details: Partial<User>) => Promise<void>;
   //   changePassword: (otpCode: string, newPassword: string) => Promise<void>;
   //   requestPasswordReset: () => Promise<void>;
@@ -76,6 +80,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         setIsLoggedIn(false);
         return false;
       }
+      console.log("user", user);
 
       setUser(user);
       setIsLoggedIn(true);
@@ -141,44 +146,39 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     initAuth();
   }, []);
 
-  // Set up token refresh interval (optional - refresh before expiry)
-  // useEffect(() => {
-  //   if (!isLoggedIn) return;
+  const logout = async () => {
+    try {
+      const res = await fetchWithAuth(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/auth/logout`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+        !!user
+      );
 
-  //   // Refresh token every 14 minutes if access token expires in 15 minutes
-  //   const interval = setInterval(async () => {
-  //     await refreshAccessToken();
-  //   }, 14 * 60 * 1000); // 14 minutes
+      const data = await res.json();
 
-  //   return () => clearInterval(interval);
-  // }, [isLoggedIn]);
+      if (!res.ok) {
+        throw new Error(data.message || "Failed to log out");
+      }
+      toast.success(data.message);
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      setUser(null);
+      setIsLoggedIn(false);
+      router.push("/");
+    } catch (err: any) {
+      toast.error(err.message);
+    }
+  };
 
-  //   const login = async (email: string, password: string) => {
-  //     await new Promise((resolve) => setTimeout(resolve, 500));
-
-  //     const userData = MOCK_USERS[email];
-  //     if (!userData || userData.password !== password) {
-  //       throw new Error("Invalid email or password");
-  //     }
-
-  //     setUser(userData.user);
-  //     setOrders(userData.orders);
-  //     setIsLoggedIn(true);
-  //     localStorage.setItem("currentUser", email);
-  //   };
-
-  //   const logout = () => {
-  //     setUser(null);
-  //     setIsLoggedIn(false);
-  //     setOrders([]);
-  //     localStorage.removeItem("currentUser");
-  //   };
-
-  const updateProfile = async (details: Partial<User>) => {
+  const updateProfile = async (details: Partial<User>): Promise<void> => {
     try {
       const accessToken = localStorage.getItem("accessToken");
-      console.log("details",details);
-      
+
       const res = await fetch("/api/auth/user/profile", {
         method: "PATCH",
         headers: {
@@ -203,8 +203,6 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     } catch (error: any) {
       console.error("updateProfile failed:", error);
       toast.error(error.message || "Something went wrong");
-      return false;
-    } finally {
     }
   };
 
@@ -249,7 +247,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         // isLoggedIn,
         // orders,
         // login,
-        // logout,
+        logout,
         updateProfile,
         // changePassword,
         // requestPasswordReset,
