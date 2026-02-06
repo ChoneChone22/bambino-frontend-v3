@@ -11,7 +11,7 @@ export default function SignIn() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [form, setForm] = useState({
-    email: "",
+    identifier: "",
     password: "",
   });
 
@@ -33,7 +33,7 @@ export default function SignIn() {
           },
           credentials: "include",
           body: JSON.stringify({
-            email: form.email,
+            identifier: form.identifier,
             password: form.password,
           }),
         }
@@ -47,7 +47,7 @@ export default function SignIn() {
 
       toast.success("Your have successfully signed in!");
       setForm({
-        email: "",
+        identifier: "",
         password: "",
       });
       localStorage.setItem("accessToken", data.data.tokens.accessToken);
@@ -76,11 +76,11 @@ export default function SignIn() {
             <div className="space-y-2">
               <div>
                 <input
-                  type="email"
-                  id="email"
-                  placeholder="Email"
-                  value={form.email}
-                  onChange={(e) => setForm({ ...form, email: e.target.value })}
+                  type="text"
+                  id="identifier"
+                  placeholder="Email, phone,or MemberID"
+                  value={form.identifier}
+                  onChange={(e) => setForm({ ...form, identifier: e.target.value })}
                   className="w-full px-0 py-3 heading bg-transparent border-b primary_border focus:outline-none transition-colors"
                   required
                 />

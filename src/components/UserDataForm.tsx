@@ -101,7 +101,6 @@ export default function UserDataForm() {
   const [availableMenuItems, setAvailableMenuItems] = useState<MenuItem[]>([]);
 
   const onSubmit = (data: FormValuesWithDefaults) => {
-    console.log("Form submitted:", data);
     toast.success("Your information has been submitted successfully.");
     form.reset();
   };

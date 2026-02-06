@@ -12,14 +12,45 @@ export default function Register() {
   const [form, setForm] = useState({
     name: "",
     email: "",
+    phoneNumber: "",
     password: "",
   });
+  const [errors, setErrors] = useState<{ phoneNumber?: string }>({});
+
+  const validatePhoneNumber = (raw: string) => {
+    const v = raw.trim();
+
+    if (!v) return "Phone number is required.";
+
+    if (!/^[0-9+\-\s()]+$/.test(v))
+      return "Phone number contains invalid characters.";
+
+    const digits = v.replace(/\D/g, "");
+
+    if (digits.length < 10 || digits.length > 10) {
+      return "Phone number must be 10 digits.";
+    }
+
+    // optional: if starts with 0, expect 9–10 digits (commonly 10)
+    if (v.startsWith("0") && (digits.length < 9 || digits.length > 10)) {
+      return "Local phone numbers should be 9–10 digits.";
+    }
+
+    return null;
+  };
 
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
       e.preventDefault();
+
+      const phoneMsg = validatePhoneNumber(form.phoneNumber);
+      if (phoneMsg) {
+        setErrors({ phoneNumber: phoneMsg });
+        return;
+      }
+
       setIsLoading(true);
 
       const res = await fetch(
@@ -32,6 +63,7 @@ export default function Register() {
           body: JSON.stringify({
             name: form.name,
             email: form.email,
+            phoneNumber: form.phoneNumber,
             password: form.password,
           }),
         }
@@ -47,9 +79,10 @@ export default function Register() {
       setForm({
         name: "",
         email: "",
+        phoneNumber: "",
         password: "",
       });
-      router.push('/my_account')
+      router.push("/my_account");
     } catch (error: any) {
       console.log(error);
       toast.error(error.message || "An error occurred. Please try again.");
@@ -78,7 +111,7 @@ export default function Register() {
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
                   className="w-full px-0 py-3 heading bg-transparent border-b primary_border placeholder:heading focus:outline-none focus:primary_border transition-colors"
-                  // required
+                  required
                 />
               </div>
             </div>
@@ -94,6 +127,49 @@ export default function Register() {
                   className="w-full px-0 py-3 heading bg-transparent border-b primary_border placeholder:heading focus:outline-none focus:primary_border transition-colors"
                   required
                 />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <div>
+                <input
+                  type="tel"
+                  id="phoneNumber"
+                  placeholder="Phone number"
+                  value={form.phoneNumber}
+                  onChange={(e) => {
+                    const next = e.target.value;
+                    setForm((prev) => ({ ...prev, phoneNumber: next }));
+
+                    const msg = validatePhoneNumber(next);
+                    setErrors((prev) => ({
+                      ...prev,
+                      phoneNumber: msg ?? undefined,
+                    }));
+                  }}
+                  onBlur={() => {
+                    const msg = validatePhoneNumber(form.phoneNumber);
+                    setErrors((prev) => ({
+                      ...prev,
+                      phoneNumber: msg ?? undefined,
+                    }));
+                  }}
+                  inputMode="tel"
+                  autoComplete="tel"
+                  className={`w-full px-0 py-3 heading bg-transparent border-b placeholder:heading focus:outline-none transition-colors
+        ${
+          errors.phoneNumber
+            ? "border-red-500"
+            : "primary_border focus:primary_border"
+        }`}
+                  required
+                />
+
+                {errors.phoneNumber && (
+                  <p className="mt-2 text-sm text-red-500">
+                    {errors.phoneNumber}
+                  </p>
+                )}
               </div>
             </div>
 

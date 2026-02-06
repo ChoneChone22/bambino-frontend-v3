@@ -51,8 +51,6 @@ export default function ContactUs() {
         message: "",
       });
     } catch (err: any) {
-      console.log("err", err);
-
       toast.error(err.message || "An error occurred. Please try again.");
     } finally {
       setLoading(false);

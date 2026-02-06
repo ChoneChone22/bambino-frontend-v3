@@ -7,7 +7,6 @@ export async function fetchMenuItem(id: string | null, params: string) {
       cache: "no-store",
     });
 
-    console.log("r", response);
 
     if (!response.ok) {
       throw new Error(`Failed to fetch menu item: ${response.statusText}`);

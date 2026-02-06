@@ -18,7 +18,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         }
 
         const themeToApply = theme.colors ;
-        console.log("themeToApply",themeToApply);
         
 
         if (themeToApply) {
@@ -37,7 +36,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
 function applyTheme(colors: Record<string, string>) {
   Object.entries(colors).forEach(([key, value]) => {
-    console.log("value",value);
     
     document.documentElement.style.setProperty(`--color-${key}`, value);
   });

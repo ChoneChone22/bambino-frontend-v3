@@ -16,6 +16,7 @@ import { useUser } from "./UserContext";
 import { fetchWithAuth } from "@/utils/api";
 import { toast } from "sonner";
 import { useRef, useCallback } from "react";
+import { usePathname } from "next/navigation";
 
 interface CartContextType {
   items: CartItem[];
@@ -45,23 +46,34 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const { user, authLoading } = useUser();
   const [loading, setLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
-  
+
+  const pathname = usePathname();
+
+  const token = localStorage.getItem("token");
   const fetchCart = useCallback(async () => {
     try {
-      const guestToken = localStorage.getItem("token");
       const baseUrl = process.env.NEXT_PUBLIC_BASE_URL!;
+      const rawToken =
+        typeof window !== "undefined" ? localStorage.getItem("token") : null;
+
+      const guestToken =
+        rawToken &&
+        rawToken.trim() &&
+        rawToken !== "undefined" &&
+        rawToken !== "null"
+          ? rawToken.trim()
+          : null;
+
       const url =
         !user && guestToken
           ? `${baseUrl}/cart?guestToken=${encodeURIComponent(guestToken)}`
           : `${baseUrl}/cart`;
-          
+
       const res = await fetchWithAuth(
         url,
         {
           method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
         },
         !!user
       );
@@ -80,7 +92,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
           quantity: item.quantity,
           selectedOptions: item.selectedOptions || null,
           selectedOptionsDisplay: item.selectedOptionsDisplay,
-          image: item.imageUrls[0],
+          image: item.imageUrls?.[0] ?? "",
           thaiName: item.thaiName ?? "",
           subtotal: item.subtotal,
         })
@@ -89,7 +101,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
       setItems(mappedItems);
       setTotalItems(data.totalItems);
       setTotalPrice(data.totalPrice);
-      if (!guestToken) {
+
+      // Save guestToken ONLY if backend returns one and we don't already have a valid one
+      if (!user && !guestToken && data?.guestToken) {
         localStorage.setItem("token", data.guestToken);
       }
     } catch (err) {

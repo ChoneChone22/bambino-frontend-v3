@@ -1,14 +1,15 @@
 export async function fetchWithAuth(
   url: string,
   options: RequestInit = {},
-  user: boolean,
+  user: boolean
 ) {
-  console.log("fetchWithAuth",user);
-  
-  if (!user) {
+  const guestToken =
+    typeof window !== "undefined" ? localStorage.getItem("token") : null;
+
+  console.log("guestToken", guestToken);
+
+  if (!user || guestToken) {
     console.log("no user work");
-    
-    const guestToken = localStorage.getItem("token")
 
     return fetch(url, {
       ...options,
@@ -19,14 +20,15 @@ export async function fetchWithAuth(
     });
   }
 
-  console.log("yes user work");
   let res = await fetch(url, {
     ...options,
     credentials: "include",
   });
+  console.log("res", res);
 
   if (res.status === 401 || res.status === 403) {
     const accessToken = localStorage.getItem("accessToken");
+    console.log("access", accessToken);
 
     if (accessToken) {
       res = await fetch(url, {

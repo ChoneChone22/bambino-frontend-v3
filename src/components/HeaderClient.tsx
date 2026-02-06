@@ -1,17 +1,19 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Menu, X, Search, CircleUser } from "lucide-react";
 import CartSheet from "./CartSheet";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { useUser } from "./UserContext";
+import { useCart } from "./CartContext";
 
 export default function HeaderClient() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const { authLoading } = useUser();
+  const { fetchCart } = useCart();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [searchQuery, setSearchQuery] = useState(searchParams.get("q") || "");
@@ -35,6 +37,10 @@ export default function HeaderClient() {
     if (!trimmed) return;
     router.push(`/search?q=${encodeURIComponent(trimmed)}`);
   };
+
+  useEffect(() => {
+    fetchCart();
+  }, []);
 
   return (
     <>
